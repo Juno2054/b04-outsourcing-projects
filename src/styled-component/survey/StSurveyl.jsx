@@ -205,7 +205,7 @@ export const SurveyProgress = styled.div`
 `
 export const SurveyProgressBar = styled.div`
   height: 30px;
-  width: 25%;
+  width: ${(props) => props.width}%;
   background: linear-gradient(to left, #4cb8c4, #3cd3ad);
 `
 export const SurveyPage = styled.div`
@@ -285,6 +285,9 @@ export const SurveyController = styled.div`
     padding: 8px 18px;
     font-size: 20px;
     font-weight: 300;
+    width: 100px;
+    text-align: center;
+    tex
   }
   button:hover {
     cursor: pointer;
