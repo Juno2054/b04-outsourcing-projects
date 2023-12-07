@@ -195,18 +195,29 @@ export const Survey = styled.form`
   margin-top: 75px;
   margin-bottom: 50px;
   background-color: #fafafa;
+  H4 {
+    padding: 10px;
+    font-size: 30px;
+    height: 23px;
+    align-items: left;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
 `
 
 export const SurveyProgress = styled.div`
   width: 100%;
   height: 30px;
   background: #f5f5f5;
+  border: #f5f5f5 2px solid;
   overflow: hidden;
 `
 export const SurveyProgressBar = styled.div`
   height: 30px;
   width: ${(props) => props.width}%;
   background: linear-gradient(to left, #4cb8c4, #3cd3ad);
+  transition: all 0.4s;
+  text-align: center;
 `
 export const SurveyPage = styled.div`
   font-weight: 100;
@@ -240,8 +251,8 @@ export const SurveyQuestionItem = styled.div`
     font-size: 20px;
   }
   input[type='radio'] + label span {
-    background-color: #ea3267;
     display: inline-block;
+    border: 2px solid #3dd2af;
     width: 40px;
     height: 40px;
     margin: 2px 4px 0 0;
@@ -256,6 +267,7 @@ export const SurveyQuestionItem = styled.div`
     top: 2px;
     left: 5px;
     margin: 0px;
+    font-weight: bold;
   }
   input[type='radio'] + label span,
   input[type='radio']:checked + label span {
@@ -266,7 +278,8 @@ export const SurveyQuestionItem = styled.div`
   }
   input[type='radio']:checked + label span {
     border: 2px solid #3dd2af;
-    background: transparent;
+    background-color: #ea3267;
+    /* background: transparent; */
   }
   input {
   }
@@ -287,7 +300,6 @@ export const SurveyController = styled.div`
     font-weight: 300;
     width: 100px;
     text-align: center;
-    tex
   }
   button:hover {
     cursor: pointer;

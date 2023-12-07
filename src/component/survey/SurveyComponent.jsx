@@ -3,11 +3,22 @@ import * as St from '../../styled-component/survey/StSurveyl'
 import SurveyData from '../survey/Data/surveyData.json'
 function SurveyComponent() {
   const questions = [...SurveyData]
+  const [selectedOption, setSelectedOption] = useState(null)
   const [questionNum, setQuestionNum] = useState(0)
-  const SurveyComponent = () => {
+  //   인풋벨류 바뀌는거 확인해주는 함수
+  const handleOptionChange = (e) => {
+    setSelectedOption(e.target.value)
+  }
+  //   다음버튼 누르면 다음 질문으로 넘어가는 함수 만약 선택안하고 넘어가면 alert창 띄워주기
+  const nextQuestion = () => {
+    if (selectedOption === null) {
+      alert('답변을 선택해주세요')
+      return
+    }
     if (questionNum < questions.length - 1) {
       setQuestionNum(questionNum + 1)
     }
+    setSelectedOption(null)
   }
   console.log((questionNum / questions.length) * 100)
   return (
@@ -22,7 +33,9 @@ function SurveyComponent() {
       <St.MediumDiv>
         {/* 진행상황 */}
         <St.Survey>
+          <St.H4>진행상황</St.H4>
           <St.SurveyProgress>
+            {/* 진행상황 ui로 보여주는 바 */}
             <St.SurveyProgressBar
               width={(questionNum / questions.length) * 100}
             />
@@ -32,16 +45,21 @@ function SurveyComponent() {
               <div key={questionNum}>
                 <St.SurveyPage>
                   <St.SurveyQuestion>
+                    {/* 문제 번호와 질문 */}
                     <p>{`Q${questionNum + 1}.${
                       questions[questionNum].question
                     }`}</p>
                   </St.SurveyQuestion>
+                  {/* 문제의 선택지 */}
                   {questions[questionNum].options.map((option, index1) => (
                     <div key={index1}>
                       <St.SurveyQuestionItem>
                         <input
                           type="radio"
+                          name={`question${questionNum}`}
                           id={`radio${index1}${questionNum}`}
+                          value={option}
+                          onChange={handleOptionChange}
                         />
                         <label htmlFor={`radio${index1}${questionNum}`}>
                           <span></span>
@@ -87,7 +105,7 @@ function SurveyComponent() {
           </St.SurveyPage>
         </St.Survey>
         <St.SurveyController>
-          <button onClick={SurveyComponent}> 다 음 </button>
+          <button onClick={nextQuestion}> 다 음 </button>
         </St.SurveyController>
       </St.MediumDiv>
     </St.Container>
