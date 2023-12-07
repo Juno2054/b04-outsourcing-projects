@@ -28,7 +28,7 @@ export const TopDiv = styled.div`
   width: 100%;
   border-bottom: 1px solid black;
   margin-top: 10px;
-  padding: 30px 79px 31px;
+  padding-bottom: 30px;
 `
 export const TopImg = styled.img`
   width: 100%;
