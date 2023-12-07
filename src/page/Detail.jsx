@@ -1,7 +1,11 @@
 import React from 'react'
-
+import DetailComponent from '../component/detail/DetailComponent'
 function Detail() {
-  return <div>Detail</div>
+  return (
+    <>
+      <DetailComponent />
+    </>
+  )
 }
 
 export default Detail
