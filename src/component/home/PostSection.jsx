@@ -1,18 +1,18 @@
 import React from 'react'
 import styled from 'styled-components'
 import PostCarousel from './PostCarousel'
-import PostFormToggle from './PostFormToggle'
+import PostFormModal from './PostFormModal'
 
-function PostButton() {
+function PostSection() {
   return (
     <PostToggleSection>
-      <PostFormToggle />
+      <PostFormModal />
       <PostCarousel />
     </PostToggleSection>
   )
 }
 
-export default PostButton
+export default PostSection
 
 const PostToggleSection = styled.section`
   flex-basis: 25%;
