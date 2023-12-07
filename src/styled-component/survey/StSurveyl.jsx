@@ -190,3 +190,104 @@ export const P = styled.p`
   align-items: left;
   color: white;
 `
+
+export const Survey = styled.form`
+  margin-top: 75px;
+  margin-bottom: 50px;
+  background-color: #fafafa;
+`
+
+export const SurveyProgress = styled.div`
+  width: 100%;
+  height: 30px;
+  background: #f5f5f5;
+  overflow: hidden;
+`
+export const SurveyProgressBar = styled.div`
+  height: 30px;
+  width: 25%;
+  background: linear-gradient(to left, #4cb8c4, #3cd3ad);
+`
+export const SurveyPage = styled.div`
+  font-weight: 100;
+  padding: 0px 40px 40px 40px;
+`
+export const SurveyQuestion = styled.div`
+  font-weight: 100;
+  height: 100px;
+  padding: 40px;
+  margin-bottom: 20px;
+  p {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    line-height: 40px;
+  }
+`
+export const SurveyQuestionItem = styled.div`
+  background: #fff;
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(33, 33, 33, 0.15);
+  border-radius: 0px 0px 4px 4px;
+
+  padding: 20px;
+  input {
+    display: none;
+  }
+  input[type='radio'] + label {
+    color: #292321;
+    font-weight: 300;
+    font-size: 20px;
+  }
+  input[type='radio'] + label span {
+    background-color: #ea3267;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin: 2px 4px 0 0;
+    vertical-align: middle;
+    cursor: pointer;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+  }
+  label p {
+    display: inline-block;
+    position: relative;
+    top: 2px;
+    left: 5px;
+    margin: 0px;
+  }
+  input[type='radio'] + label span,
+  input[type='radio']:checked + label span {
+    -webkit-transition: background-color 0.2s ease-in-out;
+    -o-transition: background-color 0.2s ease-in-out;
+    -moz-transition: background-color 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
+  }
+  input[type='radio']:checked + label span {
+    border: 2px solid #3dd2af;
+    background: transparent;
+  }
+  input {
+  }
+`
+export const SurveyController = styled.div`
+  position: relative;
+  height: 60px;
+  background: #ea3267;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+  button {
+    background: #fff;
+    border: none;
+    padding: 8px 18px;
+    font-size: 20px;
+    font-weight: 300;
+  }
+  button:hover {
+    cursor: pointer;
+    background: #f2f2f2;
+  }
+`
