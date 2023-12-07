@@ -1,7 +1,8 @@
 import React from 'react'
+import SurveyComponent from '../component/survey/SurveyComponent'
 
 function Survey() {
-  return <div>Survey</div>
+  return <SurveyComponent />
 }
 
 export default Survey
