@@ -4,9 +4,8 @@ export const Div = styled.div``
 
 export const Container = styled.div`
   margin-top: 50px;
-  /* display: flex; */
+  display: flex;
   flex-direction: column;
-
   width: 90%;
   margin: 0 auto;
   margin-bottom: 300px;
@@ -24,7 +23,6 @@ export const Container = styled.div`
 export const TopDiv = styled.div`
   display: flex;
   flex-direction: column;
-
   width: 100%;
   border-bottom: 1px solid black;
   margin-top: 10px;
@@ -43,12 +41,12 @@ export const TopImg = styled.img`
   object-fit: cover;
 `
 export const TopDiv2 = styled.div`
-  /* margin: -100px auto 0; */
+  margin: -100px auto 0;
   padding-top: 45px;
   height: 200px;
   padding-bottom: 4px;
   box-sizing: inherit;
-  /* position: relative; */
+  position: relative;
   text-align: center;
   width: 100%;
   /* z-index: 10; */
