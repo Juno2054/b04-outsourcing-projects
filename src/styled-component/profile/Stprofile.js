@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const MyPageContainer = styled.div`
-  width: 50%;
+  width: 40%;
   margin: 0 auto;
   border-radius: 8px;
   text-align: center;
@@ -10,29 +10,35 @@ export const MyPageContainer = styled.div`
   border: 1px solid #ccc;
   padding: 20px;
   overflow: auto;
+  ${({ theme }) => theme.mediaQuery.md`
+    width:60%;
+ `}
+  ${({ theme }) => theme.mediaQuery.sm`
+    width:70%;
+ `}
 `
 export const UserInfo = styled.div`
-  flex-direction: column;
-  flex-wrap: nowrap;
-  align-items: center;
   div {
-    width: 100%;
     font-size: 12px;
     text-align: left;
-    padding: 10px;
     font-weight: bold;
   }
   flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: center;
   display: flex;
 `
 export const ProfileImageWrap = styled.div`
-  width: 30%;
+  margin-top: 5px;
 `
 export const UserWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
   p {
-    padding: 5px;
+    margin-top: 5px;
+    &:first-child {
+      font-size: ${({ theme }) => theme.fontSize.md};
+    }
   }
 `
 
@@ -82,8 +88,8 @@ export const ProfileWrap = styled.div`
 `
 
 export const ProfileEdit = styled.img`
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   object-fit: cover;
   cursor: pointer;
   position: absolute;

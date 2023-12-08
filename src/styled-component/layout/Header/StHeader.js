@@ -14,6 +14,10 @@ export const Header = styled.div`
   align-items: center;
   padding: 1rem;
   border-bottom: 1px solid #ccc;
+  ${({ theme }) => theme.mediaQuery.sm`
+     
+    flex-direction: column;
+ `}
 `
 
 export const Logo = styled.div`

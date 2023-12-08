@@ -203,7 +203,7 @@ const SampleModal = ({ setModal }) => {
           <St.ProfileWrap>
             <St.ProfileImage src={previewImg || defaultImg} alt="" />
             <St.ProfileEdit
-              src={process.env.PUBLIC_URL + '/asset/img/profile/edit.png'}
+              src={process.env.PUBLIC_URL + '/asset/img/profile/camera.png'}
               alt="Edit Icon"
               onClick={handleImageClick}
             ></St.ProfileEdit>
