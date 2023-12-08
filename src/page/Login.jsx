@@ -63,7 +63,11 @@ const Login = () => {
             photoURL: user.photoURL,
           })
         )
+<<<<<<< HEAD
         console.log('확인')
+=======
+        console.log('찍히냐')
+>>>>>>> db595d8b9fbc44b46dcf041bad0c74cdfbbcc7ac
         // navigate('/') // 로그인한 상태라면 홈 페이지로 이동
         console.log(user)
       }
