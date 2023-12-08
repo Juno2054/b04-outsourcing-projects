@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom'
 import { db } from '../../API/firebase/firebase.API'
 import { selectPosts, setPosts } from '../../redux/modules/home/postsSlice'
 import {
-  HotPlaceHeading,
   Post,
   PostContent,
   PostImage,
@@ -14,7 +13,7 @@ import {
   PostTitle,
 } from '../../styled-component/home/postListStyles'
 
-function PostList() {
+function PostList({ selectedPlace }) {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const posts = useSelector(selectPosts)
@@ -38,19 +37,23 @@ function PostList() {
 
   return (
     <PostListSection>
-      <HotPlaceHeading>Hot Place</HotPlaceHeading>
-      {posts.map((post) => (
-        <Post
-          key={post.id}
-          onClick={() => navigate(`/detail/${post.id}`, { state: post })}
-        >
-          <PostImage src={post.postImg} alt="Post" />
-          <PostContent>
-            <PostTitle>{post.title}</PostTitle>
-            <PostText>{post.content}</PostText>
-          </PostContent>
-        </Post>
-      ))}
+      {selectedPlace &&
+        posts
+          .filter((post) => selectedPlace.mapName === post.mapName)
+          .map((post) => (
+            <Post
+              key={post.id}
+              onClick={() => navigate(`/detail/${post.id}`, { state: post })}
+            >
+              {post.postImg ? (
+                <PostImage src={post.postImg} alt="Post" />
+              ) : null}
+              <PostContent>
+                <PostTitle>{post.title}</PostTitle>
+                <PostText>{post.content}</PostText>
+              </PostContent>
+            </Post>
+          ))}
     </PostListSection>
   )
 }

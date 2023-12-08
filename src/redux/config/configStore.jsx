@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import mapPlaceSlice from '../modules/home/mapPlaceSlice'
 import postsSlice from '../modules/home/postsSlice'
+import loginSlice from '../modules/login/loginSlice'
 import sampleUser from '../modules/sample/sampleUserSlice'
 
 const store = configureStore({
@@ -8,6 +9,7 @@ const store = configureStore({
     sampleUser,
     postsSlice,
     mapPlace: mapPlaceSlice,
+    loginSlice,
   },
 })
 

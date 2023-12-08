@@ -7,13 +7,6 @@ const PostListSection = styled.section`
   margin: 5px;
   flex-basis: 25%;
 `
-const HotPlaceHeading = styled.h2`
-  font-size: 24px;
-  color: #ea3267;
-  margin-top: 20px;
-  text-align: center;
-  margin-bottom: 20px;
-`
 
 const Post = styled.article`
   display: flex;
@@ -26,6 +19,8 @@ const Post = styled.article`
   transition: transform 0.3s ease-in-out;
   margin-bottom: 20px;
   margin-right: 10px;
+  height: 125px;
+  width: 100%;
   cursor: pointer;
 
   &:hover {
@@ -44,24 +39,16 @@ const PostImage = styled.img`
 const PostContent = styled.div`
   flex: 1;
   margin-left: 20px;
-
   margin-top: 13px;
 `
 
 const PostTitle = styled.h2`
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+  margin-top: 8px;
   color: #333;
 `
 
 const PostText = styled.p`
   color: #666;
 `
-export {
-  HotPlaceHeading,
-  Post,
-  PostContent,
-  PostImage,
-  PostListSection,
-  PostText,
-  PostTitle,
-}
+export { Post, PostContent, PostImage, PostListSection, PostText, PostTitle }

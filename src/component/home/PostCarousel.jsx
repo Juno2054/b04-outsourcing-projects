@@ -3,40 +3,57 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import PostCard from './CarouselCard'
 
-const PostCarousel = () => {
+const PostCarousel = ({ place }) => {
   const selectPosts = useSelector((state) => state.postsSlice.posts)
   const [currentSlide, setCurrentSlide] = useState(0)
 
   const nextSlide = () => {
-    const lastIndex = selectPosts.length - 1
-    const shouldResetIndex = currentSlide === lastIndex
-    const index = shouldResetIndex ? 0 : currentSlide + 1
+    const lastIndex = filteredPosts.length - 1
+    const index = currentSlide === lastIndex ? 0 : currentSlide + 1
     setCurrentSlide(index)
   }
 
   const prevSlide = () => {
-    const lastIndex = selectPosts.length - 1
-    const shouldResetIndex = currentSlide === 0
-    const index = shouldResetIndex ? lastIndex : currentSlide - 1
+    const lastIndex = filteredPosts.length - 1
+    const index = currentSlide === 0 ? lastIndex : currentSlide - 1
     setCurrentSlide(index)
   }
 
+  const filteredPosts = selectPosts
+    .filter((item) => item.mapName === place.mapName)
+    .sort()
+    .reverse()
+
   return (
     <SliderContainer>
-      <SlideList>
-        {selectPosts.map((post, index) => (
-          <SlideItem key={post.id} active={index === currentSlide}>
-            <PostCard post={post} />
-          </SlideItem>
-        ))}
-      </SlideList>
-      <PrevButton onClick={prevSlide}>{'<'}</PrevButton>
-      <NextButton onClick={nextSlide}>{'>'}</NextButton>
+      {filteredPosts.length === 0 ? (
+        <Message>아직 등록된 게시물이 없습니다!</Message>
+      ) : (
+        <>
+          <SlideList>
+            {filteredPosts.map((post, index) => (
+              <SlideItem key={post.id} active={index === currentSlide}>
+                <PostCard post={post} />
+              </SlideItem>
+            ))}
+          </SlideList>
+          <PrevButton onClick={prevSlide}>{'<'}</PrevButton>
+          <NextButton onClick={nextSlide}>{'>'}</NextButton>
+        </>
+      )}
     </SliderContainer>
   )
 }
 
 export default PostCarousel
+
+const Message = styled.p`
+  text-align: center;
+  font-size: 20px;
+  color: #555;
+  font-style: italic;
+  margin-top: 10px;
+`
 
 const SliderContainer = styled.div`
   width: 100%;
@@ -68,9 +85,11 @@ const SliderButton = styled.button`
 `
 
 const PrevButton = styled(SliderButton)`
+  font-size: 50px;
   left: 10px;
 `
 
 const NextButton = styled(SliderButton)`
+  font-size: 50px;
   right: 10px;
 `
