@@ -3,7 +3,8 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { v4 as uuidv4 } from 'uuid'
-import { db } from '../../API/firebase/firebase.API'
+import { db } from '../../../API/firebase/firebase.API'
+import Marker from '../map/Marker'
 
 const starRating = [
   '별점을 선택해주세요!',
@@ -19,6 +20,7 @@ function PostFormModal({ closeModal }) {
   const [content, setContent] = useState('')
   const [rating, setRating] = useState(0)
   const [selectedMapPlace, setSelectedMapPlace] = useState('')
+  const [selectedPosition, setSelectedPosition] = useState(null)
 
   const mapPlaces = useSelector((state) => state.mapPlace.mapPlaces)
 
@@ -50,12 +52,15 @@ function PostFormModal({ closeModal }) {
         content: content,
         rating: rating,
         mapName: selectedMapPlace,
+        lng: selectedPosition.lng,
+        lat: selectedPosition.lat,
       })
 
       setTitle('')
       setContent('')
       setRating(0)
       setSelectedMapPlace('')
+      setSelectedPosition(null)
 
       closeModal()
       window.location.reload()
@@ -63,7 +68,6 @@ function PostFormModal({ closeModal }) {
       console.error('Error adding document: ', error)
     }
   }
-
   return (
     <ModalWrapper>
       <CloseButton onClick={closeModal}>Close</CloseButton>
@@ -106,6 +110,11 @@ function PostFormModal({ closeModal }) {
             </Option>
           ))}
         </Select>
+        <Marker
+          onPositionChange={(newPosition) => {
+            setSelectedPosition(newPosition)
+          }}
+        />
         <SubmitButton type="submit">게시</SubmitButton>
       </Form>
     </ModalWrapper>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import Map from '../component/home/Map'
-import PostList from '../component/home/PostList'
-import PostSection from '../component/home/PostSection'
+import Map from '../component/home/map/Map'
+import PostList from '../component/home/post/PostList'
+import PostSection from '../component/home/post/PostSection'
 import { Container, HomeSection } from '../styled-component/home/homeStyles'
 
 const Home = () => {
@@ -10,7 +10,7 @@ const Home = () => {
   const [showPostList, setShowPostList] = useState(true)
 
   useEffect(() => {
-    togglePostList() // 컴포넌트가 처음 렌더링될 때 togglePostList 함수 호출
+    togglePostList()
   }, [])
 
   const handlePlaceClick = (placeData) => {

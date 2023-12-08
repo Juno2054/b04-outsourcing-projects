@@ -1,18 +1,18 @@
 import { collection, getDocs } from 'firebase/firestore'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { db } from '../../API/firebase/firebase.API'
+import { db } from '../../../API/firebase/firebase.API'
 import {
   setMapPlaces,
   setSelectedButton,
-} from '../../redux/modules/home/mapPlaceSlice'
+} from '../../../redux/modules/home/mapPlaceSlice'
 import {
   Button,
   ButtonWrapper,
   MapSection,
-} from '../../styled-component/home/mapStyles'
+} from '../../../styled-component/home/mapStyles'
 
-function Map() {
+function MapButton() {
   const dispatch = useDispatch()
   const mapPlace = useSelector((state) => state.mapPlace.mapPlaces)
   const selectedButton = useSelector((state) => state.mapPlace.selectedButton)
@@ -54,4 +54,4 @@ function Map() {
   )
 }
 
-export default Map
+export default MapButton

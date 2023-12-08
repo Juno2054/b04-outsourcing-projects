@@ -2,8 +2,8 @@ import { collection, getDocs } from 'firebase/firestore'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { db } from '../../API/firebase/firebase.API'
-import { selectPosts, setPosts } from '../../redux/modules/home/postsSlice'
+import { db } from '../../../API/firebase/firebase.API'
+import { selectPosts, setPosts } from '../../../redux/modules/home/postsSlice'
 import {
   Post,
   PostContent,
@@ -11,7 +11,7 @@ import {
   PostListSection,
   PostText,
   PostTitle,
-} from '../../styled-component/home/postListStyles'
+} from '../../../styled-component/home/postListStyles'
 
 function PostList({ selectedPlace }) {
   const navigate = useNavigate()
