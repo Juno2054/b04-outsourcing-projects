@@ -12,6 +12,7 @@ import { auth, storage } from '../../API/firebase/firebase.API'
 import { userUpdateProfile } from '../../redux/modules/login/loginSlice'
 import * as St from '../../styled-component/profile/Stprofile'
 // 로컬스토리지에 저장된 정보 가져오기 - 로그인 할때 저장해줬음
+
 const UrlPhoto = JSON.parse(localStorage.getItem('photoURL'))
 const UrlEmail = localStorage.getItem('email')
 const UrlDisplayName = localStorage.getItem('displayName')
@@ -154,6 +155,12 @@ const SampleModal = ({ setModal }) => {
         displayName: inputRef.current.displayName.value,
         photoURL,
       })
+      localStorage.setItem('user', JSON.stringify(auth.currentUser))
+      localStorage.setItem(
+        'displayName',
+        JSON.stringify(inputRef.current.displayName.value)
+      )
+      localStorage.setItem('photoURL', JSON.stringify(photoURL))
     } catch (error) {
       throw new Error('profileUpdate하다가 뜬', error)
     }
