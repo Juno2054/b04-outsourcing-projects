@@ -1,19 +1,39 @@
 import styled from 'styled-components'
 
 export const MyPageContainer = styled.div`
-  width: 70%;
+  width: 50%;
   margin: 0 auto;
   border-radius: 8px;
   text-align: center;
   position: relative;
-  margin-top: 20px;
+  margin-top: 50px;
+  border: 1px solid #ccc;
+  padding: 20px;
+  overflow: auto;
 `
-
 export const UserInfo = styled.div`
   flex-direction: column;
   flex-wrap: nowrap;
   align-items: center;
-  border: 1px soli;
+  div {
+    width: 100%;
+    font-size: 12px;
+    text-align: left;
+    padding: 10px;
+    font-weight: bold;
+  }
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  display: flex;
+`
+export const ProfileImageWrap = styled.div`
+  width: 30%;
+`
+export const UserWrap = styled.div`
+  p {
+    padding: 5px;
+  }
 `
 
 export const ProfileImage = styled.img`
@@ -27,7 +47,6 @@ export const ProfileImage = styled.img`
 export const Nickname = styled.span`
   font-size: ${({ theme }) => theme.fontSize.md};
   font-weight: bold;
-  margin-left: 15px;
 `
 
 export const Edit = styled.img`
@@ -55,7 +74,7 @@ export const Modal = styled.div`
     font-size: 12px;
     text-align: left;
     padding: 10px;
-    border-bottom: 2px solid #ccc;
+    font-weight: bold;
   }
 `
 export const ProfileWrap = styled.div`
@@ -70,26 +89,6 @@ export const ProfileEdit = styled.img`
   position: absolute;
   top: 50px;
   right: 50px;
-`
-
-export const ModalOverlay = styled.div`
-  /* 모달을 화면 중앙에 위치시키기 위한 스타일 */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* 페이지와 동일한 반투명한 배경 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
-export const ModalContent = styled.div`
-  /* ModalContent 스타일 */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 `
 
 export const EditButton = styled.button`
@@ -115,8 +114,9 @@ export const EditInput = styled.input`
   }
 `
 
-export const Span = styled.span`
+export const P = styled.p`
   font-size: ${({ theme }) => theme.fontSize.sm};
+  width: 100%;
   flex: 1;
   text-align: left;
   font-weight: 600;
@@ -139,4 +139,7 @@ export const Bio = styled.span`
 
 export const ModalInput = styled.input`
   border: none;
+  &:focus {
+    outline: none;
+  }
 `

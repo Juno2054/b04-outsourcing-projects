@@ -1,17 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import * as St from '../../styled-component/profile/Stprofile'
-import styled from 'styled-components'
+import { uuidv4 } from '@firebase/util'
+import { updateProfile } from 'firebase/auth'
 import {
   deleteObject,
   getDownloadURL,
   ref,
   uploadBytesResumable,
 } from 'firebase/storage'
-import { updateProfile } from 'firebase/auth'
-import { uuidv4 } from '@firebase/util'
+import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { auth, storage } from '../../API/firebase/firebase.API'
-import { sampleUserUpdateProfile } from '../../redux/modules/sample/sampleUserSlice'
+import { userUpdateProfile } from '../../redux/modules/login/loginSlice'
+import * as St from '../../styled-component/profile/Stprofile'
+
 function SampleProfile() {
   const [modal, setModal] = useState(false)
   return (
@@ -24,40 +24,35 @@ function SampleProfile() {
     </St.MyPageContainer>
   )
 }
-
 export default SampleProfile
 
 const SampleUserProfile = ({ setModal }) => {
-  const sampleUser = useSelector((state) => state.sampleUser)
+  const loginSlice = useSelector((state) => state.loginSlice)
   return (
     <St.UserInfo>
-      <div>
-        <St.ProfileImage
-          src={
-            process.env.PUBLIC_URL +
-            '/asset/img/sample/defaultProfileImg/avatar.jpg'
-          }
-          alt=""
-        />
-      </div>
-      <St.Span>닉네임 : {sampleUser.displayName}</St.Span>
-      <St.Span>이메일 : {sampleUser.email}</St.Span>
-      <St.Span>자기소개 : {sampleUser.intro || '없네요'}</St.Span>
-      <St.Edit
-        src={process.env.PUBLIC_URL + '/asset/img/profile/edit.png'}
-        alt="Edit Icon"
-        onClick={() => setModal(true)}
-      ></St.Edit>
+      <St.ProfileImageWrap>
+        <St.ProfileImage src={loginSlice.photoURL} />
+        <St.Edit
+          src={process.env.PUBLIC_URL + '/asset/img/profile/edit.png'}
+          alt="Edit Icon"
+          onClick={() => setModal(true)}
+        ></St.Edit>
+      </St.ProfileImageWrap>
+      <St.UserWrap>
+        <p>{loginSlice.displayName || '닉네임'}</p>
+        <p>{loginSlice.email || '이메일'}</p>
+        <p>{loginSlice.intro || '자기소개'}</p>
+      </St.UserWrap>
     </St.UserInfo>
   )
 }
 
 const SampleModal = ({ setModal }) => {
   const inputRef = useRef({})
-  const sampleUser = useSelector((state) => state.sampleUser)
+  const loginSlice = useSelector((state) => state.loginSlice)
   const defaultImg =
-    sampleUser.photoURL ||
-    process.env.PUBLIC_URL + '/asset/img/sample/defaultProfileImg/avatar.jpg'
+    loginSlice.photoURL ||
+    process.env.PUBLIC_URL + '/asset/img/login/profileDefaultImg.jpg'
   const [previewImg, setPreviewImg] = useState()
   const imgRef = useRef()
   const [uploadImage, setUploadImage] = useState()
@@ -83,11 +78,11 @@ const SampleModal = ({ setModal }) => {
   // firebase 기존이미지 삭제 하기
   const deletePreProfileImageOnStorage = async () => {
     // user에게 photoURLKey가 없다면 함수 종료 하자 - 처음 프로필 등록하는 거니까
-    if (!sampleUser.profilePhotoURLKey) return
+    if (!loginSlice.profilePhotoURLKey) return
     try {
       const desertRef = ref(
         storage,
-        `profileImage/${sampleUser.email}/${sampleUser.profilePhotoURLKey}`
+        `profileImage/${loginSlice.email}/${loginSlice.profilePhotoURLKey}`
       )
       await deleteObject(desertRef)
       console.log('삭제완료')
@@ -97,40 +92,47 @@ const SampleModal = ({ setModal }) => {
   }
 
   // 프로필 사진 Storage에 올리기
+  // 나머지 코드와 함께 수정된 부분
   const uploadProfileImageonStorage = async () => {
     try {
-      // 나중에 삭제 할 때 사용 하려고 입니다.
       const profilePhotoURLKey = uuidv4()
-      // 그냥 메타데이터 입니다.
       const metaData = {
         contentType: uploadImage.type,
       }
       const storageRef = ref(
         storage,
-        `profileImage/${sampleUser.email}/${profilePhotoURLKey}`
+        `profileImage/${loginSlice.email}/${profilePhotoURLKey}`
       )
       const UploadTask = uploadBytesResumable(storageRef, uploadImage, metaData)
-      UploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          setProgress(progress)
-        },
-        (error) => {
-          throw new Error(error)
-        },
-        () => {
-          const downLoadUrl = getDownloadURL(UploadTask.snapshot.ref)
-          return { downLoadUrl, profilePhotoURLKey }
-        }
-      )
+
+      // Promise를 사용하여 업로드 완료를 기다림
+      return new Promise((resolve, reject) => {
+        UploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            setProgress(progress)
+          },
+          (error) => {
+            reject(new Error(error))
+          },
+          async () => {
+            try {
+              const downLoadUrl = await getDownloadURL(UploadTask.snapshot.ref)
+              resolve({ downLoadUrl, profilePhotoURLKey })
+            } catch (error) {
+              reject(new Error(error))
+            }
+          }
+        )
+      })
     } catch (error) {
       throw new Error('프로필이미지 업로드 하다가', error)
     }
   }
 
-  // profile수정 함수입니다.
+  // profile 수정 함수입니다.
   const updateProfileOnFireBase = async (photoURL) => {
     try {
       await updateProfile(auth.currentUser, {
@@ -142,8 +144,8 @@ const SampleModal = ({ setModal }) => {
     }
   }
 
-  // 이미지 삭제, 이미지 업로드 후 다운받기, profile 수정하기를 통합하고, dispatch로 user Redux에 dispatch 해줍니다.
-
+  // 이미지 삭제, 이미지 업로드 후 다운받기, profile 수정하기를 통합하고,
+  //dispatch로 user Redux에 dispatch 해줍니다.
   const allInOneWithFirebaseAndUserRedux = async () => {
     try {
       await deletePreProfileImageOnStorage()
@@ -151,16 +153,21 @@ const SampleModal = ({ setModal }) => {
         await uploadProfileImageonStorage()
       await updateProfileOnFireBase(downLoadUrl)
       dispatch(
-        sampleUserUpdateProfile({
+        userUpdateProfile({
           photoURL: downLoadUrl,
           profilePhotoURLKey,
           intro: inputRef.current.intro.value,
         })
       )
+
+      // 컨텐츠 업데이트 후 모달 닫기
+      setModal(false)
     } catch (error) {
       console.log(error)
+      // 여기서 에러 처리를 해줘야해요
     }
   }
+
   // modal창 띄우면 자동 포커스 입니다.
   useEffect(() => {
     inputRef.current.displayName.focus()
@@ -188,7 +195,7 @@ const SampleModal = ({ setModal }) => {
           />
         </div>
         {/* 이미지 ENd */}
-        <p>이메일 : {sampleUser.email}</p>
+        <p>이메일 : {loginSlice.email}</p>
         <p>
           닉네임 :{' '}
           <St.ModalInput
@@ -203,7 +210,7 @@ const SampleModal = ({ setModal }) => {
             ref={(props) => (inputRef.current.intro = props)}
           />
         </p>
-        <p>UPload is {progress}% 입니당</p>
+        <p>UPload is {progress}% </p>
         <St.EditButton onClick={allInOneWithFirebaseAndUserRedux}>
           저장하기
         </St.EditButton>
@@ -217,98 +224,3 @@ const SampleModal = ({ setModal }) => {
     </St.Modal>
   )
 }
-
-// const StDiv = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   gap: 50px;
-//   text-align: center;
-//   border: 1px solid ${({ theme: { Color } }) => Color.primary};
-//   padding: 20px;
-//   border-radius: 12px;
-//   > div {
-//     width: 200px;
-//     height: 200px;
-//     border-radius: 50%;
-//     overflow: hidden;
-
-//     img {
-//       width: 100%;
-//       height: 100%;
-//       object-fit: cover;
-//     }
-//   }
-
-//   p {
-//     padding: 10px 0;
-//     border: 1px solid orange;
-//     border-radius: 12px;
-//   }
-
-//   button {
-//     padding: 10px;
-//     border: 1px solid pink;
-
-//     &:hover {
-//       transition: all 0.3s;
-//       background-color: pink;
-//       color: #fff;
-//     }
-//   }
-// `
-// const StModal = styled.div`
-//   position: fixed;
-//   top: 0;
-//   left: 0;
-//   width: 100%;
-//   height: 100%;
-//   background-color: rgba(0, 0, 0, 0.651);
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-//   align-items: center;
-//   gap: 40px;
-//   text-align: center;
-//   border: 1px solid ${({ theme: { Color } }) => Color.primary};
-//   padding: 20px;
-//   border-radius: 12px;
-//   > div {
-//     display: flex;
-//     flex-direction: column;
-//     gap: 20px;
-
-//     div {
-//       width: 200px;
-//       height: 200px;
-//       border-radius: 50%;
-//       overflow: hidden;
-//       border: 1px solid black;
-
-//       img {
-//         width: 100%;
-//         object-fit: cover;
-//       }
-//     }
-
-//     p {
-//       padding: 10px 0;
-//       border: 1px solid orange;
-//       border-radius: 12px;
-//     }
-
-//     button {
-//       padding: 10px;
-//       border: 1px solid pink;
-
-//       &:hover {
-//         transition: all 0.3s;
-//         background-color: pink;
-//         color: #fff;
-//       }
-//     }
-//   }
-//   input {
-//     padding: 10px;
-//     z-index: 99;
-//   }
-// `

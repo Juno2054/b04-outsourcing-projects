@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
+import { uuidv4 } from '@firebase/util'
+import { updateProfile } from 'firebase/auth'
 import {
   deleteObject,
   getDownloadURL,
   ref,
   uploadBytesResumable,
 } from 'firebase/storage'
-import { updateProfile } from 'firebase/auth'
-import { uuidv4 } from '@firebase/util'
+import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
 import { auth, storage } from '../../API/firebase/firebase.API'
 import { sampleUserUpdateProfile } from '../../redux/modules/sample/sampleUserSlice'
 function SampleProfile() {

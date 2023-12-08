@@ -19,7 +19,7 @@ const user = createSlice({
       state.email = payload.email
       state.photoURL =
         payload.photoURL ||
-        process.env.PUBLIC_URL + '/asset/img/login/profileDefaultImg.jpeg'
+        process.env.PUBLIC_URL + '/asset/img/login/profileDefaultImg.jpg'
       state.displayName = payload.displayName
     },
 
@@ -30,8 +30,14 @@ const user = createSlice({
     userCurrentState(state, { payload }) {
       state.currentUser = payload
     },
+    userUpdateProfile(state, { payload }) {
+      state.photoURL = payload.photoURL
+      state.profilePhotoURLKey = payload.profilePhotoURLKey
+      state.intro = payload.intro
+    },
   },
 })
 
-export const { userLogIn, userLogOut, userCurrentState } = user.actions
+export const { userLogIn, userLogOut, userCurrentState, userUpdateProfile } =
+  user.actions
 export default user.reducer
