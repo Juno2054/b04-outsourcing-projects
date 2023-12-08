@@ -1,12 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
 import {
+  GithubAuthProvider,
+  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
 } from '@firebase/auth'
+import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
 import { auth } from '../../API/firebase/firebase.API'
 import {
   sampleUserCurrentState,
@@ -126,6 +129,22 @@ const SignIn = () => {
   const signRef = useRef({})
   const dispatch = useDispatch()
   const sampleUser = useSelector((state) => state.sampleUser)
+
+  // social Login 로직입니다.
+  // Google로 로그인하는 함수
+  const onClickSignInWithGoogle = async () => {
+    // 2가지가 필요해요,
+    //하나는 google에게 나 너희한테 가입한 구글 이메일로 로그인할거야 firebase한테
+    // 로그인 할 때 필요한 UI가 있어야 한다 <-  firebase에서 social login 할 때의 UI 들어있음
+    try {
+      const provider = new GoogleAuthProvider()
+      const data = await signInWithPopup(auth, provider)
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const onClickSignIn = async (userInfo) => {
     if (sampleUser.currentUser) return alert('이미 로그인 되어있어요')
     try {
@@ -141,6 +160,13 @@ const SignIn = () => {
     } catch (error) {
       console.log(error)
     }
+  }
+  // GitHub로 로그인하는 함수
+  const 깃허브로그인 = async () => {
+    try {
+      const provider = new GithubAuthProvider()
+      await signInWithPopup(auth, provider)
+    } catch (error) {}
   }
 
   useEffect(() => {
@@ -173,6 +199,8 @@ const SignIn = () => {
       <button onClick={() => onClickSignIn(signRef.current)}>
         로그인 버튼
       </button>
+      <button onClick={onClickSignInWithGoogle}>구글이메일 로그인</button>
+      <button onClick={깃허브로그인}>깃허업 로그인</button>
     </form>
   )
 }
