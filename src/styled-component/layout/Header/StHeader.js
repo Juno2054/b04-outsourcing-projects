@@ -15,7 +15,6 @@ export const Header = styled.div`
   padding: 1rem;
   border-bottom: 1px solid #ccc;
   ${({ theme }) => theme.mediaQuery.sm`
-     
     flex-direction: column;
  `}
 `
