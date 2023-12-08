@@ -105,7 +105,9 @@ function SurveyComponent() {
           </St.SurveyPage>
         </St.Survey>
         <St.SurveyController>
-          <button onClick={nextQuestion}> 다 음 </button>
+          <button onClick={nextQuestion}>
+            <p> 다음 ></p>
+          </button>
         </St.SurveyController>
       </St.MediumDiv>
     </St.Container>

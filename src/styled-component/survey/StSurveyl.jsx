@@ -82,7 +82,9 @@ export const Title = styled.div`
   font-weight: bold;
 `
 export const MediumDiv = styled.div`
-  align-items: center;
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
   padding: 40px;
   width: 100%;
   border-bottom: 1px solid black;
@@ -215,7 +217,7 @@ export const SurveyProgress = styled.div`
 export const SurveyProgressBar = styled.div`
   height: 30px;
   width: ${(props) => props.width}%;
-  background: linear-gradient(to left, #4cb8c4, #3cd3ad);
+  background: linear-gradient(to left, #ea3267, #fbcdda);
   transition: all 0.4s;
   text-align: center;
 `
@@ -224,9 +226,9 @@ export const SurveyPage = styled.div`
   padding: 0px 40px 40px 40px;
 `
 export const SurveyQuestion = styled.div`
+  display: flex;
   font-weight: 100;
-  height: 100px;
-  padding: 40px;
+  padding: 40px 0px;
   margin-bottom: 20px;
   p {
     font-size: 30px;
@@ -240,8 +242,11 @@ export const SurveyQuestionItem = styled.div`
   margin-bottom: 15px;
   border-bottom: 1px solid rgba(33, 33, 33, 0.15);
   border-radius: 0px 0px 4px 4px;
-
   padding: 20px;
+  transition: all 0.3s;
+  :hover {
+    background-color: #f2f2f2;
+  }
   input {
     display: none;
   }
@@ -252,7 +257,7 @@ export const SurveyQuestionItem = styled.div`
   }
   input[type='radio'] + label span {
     display: inline-block;
-    border: 2px solid #3dd2af;
+    border: 2px solid #ea3267;
     width: 40px;
     height: 40px;
     margin: 2px 4px 0 0;
@@ -277,11 +282,9 @@ export const SurveyQuestionItem = styled.div`
     transition: background-color 0.2s ease-in-out;
   }
   input[type='radio']:checked + label span {
-    border: 2px solid #3dd2af;
+    border: 2px solid #ea3267;
     background-color: #ea3267;
     /* background: transparent; */
-  }
-  input {
   }
 `
 export const SurveyController = styled.div`
@@ -297,12 +300,17 @@ export const SurveyController = styled.div`
     border: none;
     padding: 8px 18px;
     font-size: 20px;
-    font-weight: 300;
+    font-weight: bold;
     width: 100px;
     text-align: center;
+    color: #ea3267;
+    border-radius: 15px;
   }
   button:hover {
     cursor: pointer;
     background: #f2f2f2;
+  }
+  p {
+    margin-left: 10px;
   }
 `
