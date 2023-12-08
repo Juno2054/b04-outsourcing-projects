@@ -6,6 +6,9 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  GoogleAuthProvider,
+  signInWithPopup,
+  GithubAuthProvider,
 } from '@firebase/auth'
 import { auth } from '../../API/firebase/firebase.API'
 import {
@@ -124,6 +127,29 @@ const SignIn = () => {
   const signRef = useRef({})
   const dispatch = useDispatch()
   const sampleUser = useSelector((state) => state.sampleUser)
+
+  //소셜 로그인 로직
+  const onClickSingInWithGoogel = async () => {
+    //2가지가 필요, 하나는 구글한테 나 너희한테 가입한 구글 이메일로 로그인할거야
+    //파이어 베이스한테
+    //로그인 할때 필요한 ui가 있어야 함  파이어베이스에 들어있음
+    try {
+      const provider = new GoogleAuthProvider()
+      const data = await signInWithPopup(auth, provider)
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  // 깃허브 로그인
+  const 깃허브 = async () => {
+    try {
+      const provider = new GithubAuthProvider()
+      const data = await signInWithPopup(auth, provider)
+      console.log(data)
+    } catch (error) {}
+  }
+
   const onClickSignIn = async (userInfo) => {
     if (sampleUser.currentUser) return alert('이미 로그인 되어있어요')
     try {
@@ -172,6 +198,8 @@ const SignIn = () => {
       <button onClick={() => onClickSignIn(signRef.current)}>
         로그인 버튼
       </button>
+      <button onClick={onClickSingInWithGoogel}>구글 로그인</button>
+      <button onClick={깃허브}>깃헙 로그인</button>
     </form>
   )
 }
