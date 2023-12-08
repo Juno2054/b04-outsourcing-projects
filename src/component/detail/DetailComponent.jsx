@@ -1,6 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import * as St from '../../styled-component/detail/Stdetail'
 function DetailComponent() {
+  const [selectStar, setSelectStar] = useState(null)
+  const [isOpened, setIsOpened] = useState(false)
+  const handleStarChange = (starValue) => {
+    setSelectStar(starValue)
+    setIsOpened(false)
+  }
+  const handleToggle = () => setIsOpened(!isOpened)
   return (
     <St.Container>
       {/* 상단에는 지도에 있는 좌표 이름 과 장소 이미지? */}
@@ -60,22 +67,59 @@ function DetailComponent() {
       <St.BottomDiv>
         <form action="">
           <St.ContentListReview>
-            <St.ContentList style={{ flex: 1 }}>
+            <St.ContentListProfile>
               <img
                 src={
                   process.env.PUBLIC_URL + '/asset/img/detaill/ico/프로필.png'
                 }
                 alt=""
               />
-            </St.ContentList>
+            </St.ContentListProfile>
 
-            <St.ContentList style={{ flex: 8, padding: '30px 0 30px 30px' }}>
+            <St.ContentList
+              style={{ flexGrow: 2, padding: '30px 0 30px 30px' }}
+            >
               <St.ContentList1> ㅇㅇㅇ 님 리뷰를 남겨보세요!! </St.ContentList1>
-              <St.ContentList1>⭐⭐⭐⭐</St.ContentList1>
-              <St.ContentList1>
+              {
+                <>
+                  <St.ContentList1 style={{ flexGrow: 6 }}>
+                    <St.selectStarBox onClick={handleToggle}>
+                      <span onClick={handleToggle}>
+                        {selectStar
+                          ? `${selectStar}  ${'⭐'.repeat(selectStar)}`
+                          : '별점선택하세요'}
+                      </span>
+                      <label>{'▾'}</label>
+                    </St.selectStarBox>
+                  </St.ContentList1>
+                  <St.ContentList1 isOpen={isOpened}>
+                    <ul>
+                      {[...Array(5)].map((star, index) => {
+                        const starValue = index + 1
+                        return (
+                          <li
+                            key={index}
+                            onClick={() => handleStarChange(starValue)}
+                          >
+                            <label key={index}>
+                              <option value={starValue}>
+                                <p>{starValue}</p>
+                                {[...Array(starValue)].map((n, index) => {
+                                  return <span>⭐</span>
+                                })}
+                              </option>
+                            </label>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  </St.ContentList1>
+                </>
+              }
+              <St.ContentListInput>
                 <St.ReviewTeaxtArea />
                 <St.Button type="submit">등 록!</St.Button>
-              </St.ContentList1>
+              </St.ContentListInput>
             </St.ContentList>
           </St.ContentListReview>
         </form>

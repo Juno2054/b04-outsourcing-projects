@@ -38,7 +38,6 @@ export const TopImg = styled.img`
   align-items: center;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  object-fit: cover;
 `
 export const TopDiv2 = styled.div`
   margin: -100px auto 0;
@@ -132,15 +131,87 @@ export const ContentList = styled.div`
   min-height: 52px;
   padding: 40px 40px 40px 40px;
   position: relative;
+  img {
+    flex: 1;
+    object-fit: contain;
+    width: 100%;
+  }
+`
+export const ContentListProfile = styled.div`
+  border-bottom: 1px solid black;
+  min-height: 52px;
+  padding: 40px 0px 0px 0px;
+  position: relative;
+  img {
+    width: 50%;
+    max-width: 150px;
+    text-align: center;
+    align-items: center;
+  }
 `
 export const ContentListReview = styled.div`
   display: flex;
   justify-content: left;
-  text-align: left;
 `
 export const ContentList1 = styled.div`
   text-align: left;
+  margin: 10px;
+  display: flex;
 
+  align-items: center;
+  span {
+    display: flex;
+    font-weight: 400;
+    padding: 12px;
+    text-align: left;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+  }
+  ul {
+    display: ${(props) => (props.isOpen ? 'block' : 'none')};
+    background-color: #fff;
+    border-left: 1px solid #ea3267;
+    border-right: 1px solid #ea3267;
+    border-bottom: 1px solid #ea3267;
+    position: absolute;
+    text-decoration: none;
+    color: rgb(37, 37, 37);
+    width: 200px;
+    font-size: 14px;
+    bottom: -52px;
+    border-radius: 4px;
+    z-index: 1;
+  }
+  li {
+    padding-left: 10px;
+    padding-top: 15px;
+    align-items: center;
+    text-align: left;
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
+  label {
+    font-size: 20px;
+    height: 23px;
+    align-items: left;
+    padding-right: 10px;
+  }
+`
+export const selectStarBox = styled.div`
+  border: 1px solid #ea3267;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 400;
+  cursor: pointer;
+  width: 200px;
+  align-items: center;
+`
+export const ContentListInput = styled.div`
+  text-align: left;
   margin: 10px;
 `
 export const ContentImgBox = styled.div`
