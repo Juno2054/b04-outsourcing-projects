@@ -56,7 +56,7 @@ const Login = () => {
             photoURL: user.photoURL,
           })
         )
-        navigate('/') // 로그인한 상태라면 홈 페이지로 이동
+        // navigate('/') // 로그인한 상태라면 홈 페이지로 이동
         console.log(user)
       }
     })
