@@ -21,7 +21,7 @@ const Login = () => {
         email,
         password
       )
-
+      console.log('로그용', userCredential)
       const user = userCredential.user
       dispatch(
         userLogIn({
@@ -31,6 +31,13 @@ const Login = () => {
           photoURL: user.photoURL,
         })
       )
+
+      // 로그인 할떄 로컬스토리지에 저장 해줌
+      localStorage.setItem('user', JSON.stringify(user.uid))
+      localStorage.setItem('email', JSON.stringify(user.email))
+      localStorage.setItem('displayName', JSON.stringify(user.displayName))
+      localStorage.setItem('photoURL', JSON.stringify(user.photoURL))
+
       alert('로그인 성공')
       console.log('로그인 성공', user)
       navigate('/home')
@@ -61,11 +68,11 @@ const Login = () => {
         console.log(user)
       }
     })
-
+    // 클린업 함수 주석처리 해놧습니다 확인해주세요
     // Clean-up 함수 등록
-    return () => {
-      unsubscribe()
-    }
+    // return () => {
+    //   unsubscribe()
+    // }
   }, [dispatch, navigate])
 
   return (
