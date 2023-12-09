@@ -159,6 +159,16 @@ const SampleModal = ({ setModal }) => {
       console.log(inputRef.current.intro.value)
       console.log(profilePhotoURLKey)
       // 길훈님 여기서 하는 겁니다.
+
+      /*
+      upDateDoc( uid )
+      downLoadUrl -  profile사진 url 입니다.
+      profilePhotoURLKey
+      inputRef.current.intro.value
+      firebase에 올리고 
+      그것을 다시 받아서 dispatch해주시면 좋겠습니다. 
+      
+      */
       dispatch(
         sampleUserUpdateProfile({
           photoURL: downLoadUrl,
