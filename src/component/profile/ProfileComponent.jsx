@@ -11,6 +11,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { auth, storage } from '../../API/firebase/firebase.API'
 import { userUpdateProfile } from '../../redux/modules/login/loginSlice'
 import * as St from '../../styled-component/profile/Stprofile'
+// 로컬스토리지에 저장된 정보 가져오기 - 로그인 할때 저장해줬음
+
+const UrlPhoto = JSON.parse(localStorage.getItem('photoURL'))
+const UrlEmail = localStorage.getItem('email')
+const UrlDisplayName = localStorage.getItem('displayName')
+const UrlIntro = localStorage.getItem('intro')
 
 function SampleProfile() {
   const [modal, setModal] = useState(false)
@@ -28,10 +34,16 @@ export default SampleProfile
 
 const SampleUserProfile = ({ setModal }) => {
   const loginSlice = useSelector((state) => state.loginSlice)
+
   return (
     <St.UserInfo>
       <St.ProfileImageWrap>
-        <St.ProfileImage src={loginSlice.photoURL} />
+        {/* 이미지 리덕스저장소에 없으면 로컬스토리지 이미지 보여줌  */}
+        {loginSlice.photoURL ? (
+          <St.ProfileImage src={loginSlice.photoURL} />
+        ) : (
+          <St.ProfileImage src={UrlPhoto} />
+        )}
         <St.Edit
           src={process.env.PUBLIC_URL + '/asset/img/profile/edit.png'}
           alt="Edit Icon"
@@ -39,9 +51,13 @@ const SampleUserProfile = ({ setModal }) => {
         ></St.Edit>
       </St.ProfileImageWrap>
       <St.UserWrap>
-        <p>{loginSlice.displayName || '닉네임'}</p>
+        {/* //로컬스토리지에 저장된 정보 가져옴 - 로그인 할때 저장해줬음 */}
+        <p>{UrlDisplayName}</p>
+        <p>{UrlEmail}</p>
+        <p>{UrlIntro}</p>
+        {/* <p>{loginSlice.displayName || '닉네임'}</p>
         <p>{loginSlice.email || '이메일'}</p>
-        <p>{loginSlice.intro || '자기소개'}</p>
+        <p>{loginSlice.intro || '자기소개'}</p> */}
       </St.UserWrap>
     </St.UserInfo>
   )
@@ -139,6 +155,12 @@ const SampleModal = ({ setModal }) => {
         displayName: inputRef.current.displayName.value,
         photoURL,
       })
+      localStorage.setItem('user', JSON.stringify(auth.currentUser))
+      localStorage.setItem(
+        'displayName',
+        JSON.stringify(inputRef.current.displayName.value)
+      )
+      localStorage.setItem('photoURL', JSON.stringify(photoURL))
     } catch (error) {
       throw new Error('profileUpdate하다가 뜬', error)
     }
@@ -181,7 +203,7 @@ const SampleModal = ({ setModal }) => {
           <St.ProfileWrap>
             <St.ProfileImage src={previewImg || defaultImg} alt="" />
             <St.ProfileEdit
-              src={process.env.PUBLIC_URL + '/asset/img/profile/edit.png'}
+              src={process.env.PUBLIC_URL + '/asset/img/profile/camera.png'}
               alt="Edit Icon"
               onClick={handleImageClick}
             ></St.ProfileEdit>

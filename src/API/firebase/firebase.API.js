@@ -1,7 +1,7 @@
+import { getAuth } from '@firebase/auth'
+import { getStorage } from '@firebase/storage'
 import { initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
-import { getStorage } from 'firebase/storage'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FB_API_KEY,
