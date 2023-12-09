@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as St from '../styled-component/login/loginStyle'
 import { useNavigate } from 'react-router-dom'
-import { createUserWithEmailAndPassword } from '@firebase/auth'
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+} from '@firebase/auth'
 import { auth, db } from '../API/firebase/firebase.API'
 import { userLogIn } from '../redux/modules/login/loginSlice'
 import { useDispatch } from 'react-redux'
@@ -55,7 +58,28 @@ const Register = () => {
   const handleToLogin = () => {
     navigate('/login')
   }
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // 로그인한 사용자 정보를 Redux 스토어에 저장
+        dispatch(
+          userLogIn({
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+          })
+        )
+        navigate('/') // 로그인한 상태라면 홈 페이지로 이동
+        console.log(user)
+      }
+    })
 
+    // Clean-up 함수 등록
+    return () => {
+      unsubscribe()
+    }
+  }, [dispatch, navigate])
   return (
     <St.LoginContainer>
       <St.LoginFormContainer>

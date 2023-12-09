@@ -158,6 +158,7 @@ const SampleModal = ({ setModal }) => {
       await updateProfileOnFireBase(downLoadUrl)
       console.log(inputRef.current.intro.value)
       console.log(profilePhotoURLKey)
+      // 길훈님 여기서 하는 겁니다.
       dispatch(
         sampleUserUpdateProfile({
           photoURL: downLoadUrl,

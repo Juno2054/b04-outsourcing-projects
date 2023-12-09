@@ -22,16 +22,18 @@ const Login = () => {
         email,
         password
       )
-
-      const user = userCredential.user
-      dispatch(
-        userLogIn({
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-        })
-      )
+      // navigate를 /로 해준것은 최상위 부모 컴포넌트가 Layout이기 때문입니다. 왜냐면은 Layout이 다 감싸고 있기 때문입니다.
+      navigate('/')
+      // 여기 주석
+      // const user = userCredential.user
+      // dispatch(
+      //   userLogIn({
+      //     uid: user.uid,
+      //     email: user.email,
+      //     displayName: user.displayName,
+      //     photoURL: user.photoURL,
+      //   })
+      // )
       //파이어 베이스에서 데이터 읽기
       alert('로그인 성공')
       console.log('로그인 성공', currentUser)
@@ -46,28 +48,29 @@ const Login = () => {
     navigate('/register')
   }
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // 로그인한 사용자 정보를 Redux 스토어에 저장
-        dispatch(
-          userLogIn({
-            uid: user.uid,
-            email: user.email,
-            displayName: user.displayName,
-            photoURL: user.photoURL,
-          })
-        )
-        navigate('/') // 로그인한 상태라면 홈 페이지로 이동
-        console.log(user)
-      }
-    })
+  // 여기 주석
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       // 로그인한 사용자 정보를 Redux 스토어에 저장
+  //       dispatch(
+  //         userLogIn({
+  //           uid: user.uid,
+  //           email: user.email,
+  //           displayName: user.displayName,
+  //           photoURL: user.photoURL,
+  //         })
+  //       )
+  //       navigate('/') // 로그인한 상태라면 홈 페이지로 이동
+  //       console.log(user)
+  //     }
+  //   })
 
-    // Clean-up 함수 등록
-    return () => {
-      unsubscribe()
-    }
-  }, [dispatch, navigate])
+  //   // Clean-up 함수 등록
+  //   return () => {
+  //     unsubscribe()
+  //   }
+  // }, [dispatch, navigate])
 
   return (
     <St.LoginContainer>
