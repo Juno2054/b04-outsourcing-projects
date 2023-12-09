@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router'
 import { userLogIn } from '../redux/modules/login/loginSlice'
 import { auth } from '../API/firebase/firebase.API'
 import { signInWithEmailAndPassword, onAuthStateChanged } from '@firebase/auth'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import SocialLogin from './SocialLogin'
 
 const Login = () => {
@@ -12,6 +12,7 @@ const Login = () => {
   const dispatch = useDispatch()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const currentUser = useSelector((state) => state.loginSlice.currentUser)
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -31,11 +32,12 @@ const Login = () => {
           photoURL: user.photoURL,
         })
       )
+      //파이어 베이스에서 데이터 읽기
       alert('로그인 성공')
-      console.log('로그인 성공', user)
+      console.log('로그인 성공', currentUser)
       navigate('/home')
     } catch (error) {
-      alert('로그인 실패')
+      alert('로그인 실패', error.message)
       console.error('로그인 실패', error.message)
     }
   }

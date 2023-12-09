@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import * as St from '../styled-component/login/loginStyle'
 import { useNavigate } from 'react-router-dom'
 import { createUserWithEmailAndPassword } from '@firebase/auth'
-import { auth } from '../API/firebase/firebase.API'
+import { auth, db } from '../API/firebase/firebase.API'
 import { userLogIn } from '../redux/modules/login/loginSlice'
 import { useDispatch } from 'react-redux'
+import { addDoc, collection } from 'firebase/firestore'
 
 const Register = () => {
   const navigate = useNavigate()
@@ -12,23 +13,34 @@ const Register = () => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [displayName, setDisplayName] = useState('')
+  const [profileIntro, setProfileIntro] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
     try {
+      // Firebase Authentication에서 회원가입 처리
       const credentialUser = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       )
-      dispatch(
-        userLogIn({
-          uid: credentialUser.user.uid,
-          email: credentialUser.user.email,
-          displayName: credentialUser.user.displayName,
-          photoURL: credentialUser.user.photoURL,
-        })
-      )
+
+      // Firestore에 유저 정보 저장
+      const newUser = {
+        uid: credentialUser.user.uid,
+        email: credentialUser.user.email,
+        displayName,
+        profileIntro,
+      }
+
+      // 'users' 콜렉션에 다큐먼트 추가
+      const usersCollectionRef = collection(db, 'users')
+      await addDoc(usersCollectionRef, newUser)
+
+      // Redux 스토어 업데이트
+      dispatch(userLogIn(newUser))
 
       alert(`${credentialUser.user.email}님 안녕하세요.`)
 
@@ -56,6 +68,18 @@ const Register = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
           <St.InputBox
+            type="text"
+            placeholder="닉네임"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+          />
+          <St.InputBox
+            type="text"
+            placeholder="자기소개"
+            value={profileIntro}
+            onChange={(e) => setProfileIntro(e.target.value)}
+          />
+          <St.InputBox
             type="password"
             placeholder="비밀번호"
             value={password}
@@ -72,3 +96,6 @@ const Register = () => {
 }
 
 export default Register
+
+// firebase Authentication에서 만든 user의 uid로 firebase, firestore에 users라는 콜렉션에 다큐먼트를 만든다.
+//

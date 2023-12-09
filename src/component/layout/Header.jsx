@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import * as St from '../../styled-component/layout/Header/StHeader'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -6,7 +6,7 @@ import { userLogOut } from '../../redux/modules/login/loginSlice'
 import { auth } from '../../API/firebase/firebase.API'
 
 function Header() {
-  const currentUser = useSelector((state) => state.user)
+  const currentUser = useSelector((state) => state.loginSlice.currentUser)
   console.log(currentUser)
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -16,7 +16,6 @@ function Header() {
       // Firebase에서 로그아웃
       // 왜 signOut(auth)는 안되나요???
       await auth.signOut()
-
       // Redux 스토어에서 로그아웃 액션을 디스패치하여 사용자 상태 초기화
       dispatch(userLogOut())
       console.log('로그아웃 성공', currentUser)
@@ -25,6 +24,7 @@ function Header() {
       console.log('로그아웃 실패', error)
     }
   }
+
   return (
     <St.Header>
       <St.Logo>
@@ -36,7 +36,7 @@ function Header() {
         </Link>
       </St.Logo>
       <St.ButtonContainer>
-        {!currentUser ? (
+        {currentUser ? (
           <>
             <Link to="/profile">
               <St.Button>마이페이지</St.Button>

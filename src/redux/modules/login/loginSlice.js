@@ -8,31 +8,39 @@ const initialState = {
   photoURL: null,
   profileIntro: '',
   profilePhotoURLKey: '',
+  userData: [],
 }
 
 const user = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    userLogIn(state, payload) {
+    userLogIn(state, { payload }) {
       state.uid = payload.uid
       state.email = payload.email
       state.photoURL =
         payload.photoURL ||
-        process.env.PUBLIC_URL + '/asset/img/login/profileDefaultImg.jpeg'
+        process.env.PUBLIC_URL + '/asset/img/login/profileDefaultImg.jpg'
       state.displayName = payload.displayName
-      state.currentUser = payload.currentUser
+      state.currentUser = true
     },
 
     userLogOut(state) {
       return initialState
     },
 
-    userCurrentState(state, payload) {
+    userCurrentState(state, { payload }) {
       state.currentUser = payload.currentUser
+    },
+
+    userUpdateProfile(state, { payload }) {
+      state.photoURL = payload.photoURL
+      state.profilePhotoURLKey = payload.profilePhotoURLKey
+      state.intro = payload.intro
     },
   },
 })
 
-export const { userLogIn, userLogOut, userCurrentState } = user.actions
+export const { userLogIn, userLogOut, userCurrentState, userUpdateProfile } =
+  user.actions
 export default user.reducer
