@@ -1,17 +1,16 @@
 import {
-<<<<<<< HEAD
   createUserWithEmailAndPassword,
   GithubAuthProvider,
   GoogleAuthProvider,
-=======
-  GithubAuthProvider,
-  GoogleAuthProvider,
-  createUserWithEmailAndPassword,
->>>>>>> db595d8b9fbc44b46dcf041bad0c74cdfbbcc7ac
+
+
+
+
+
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
-  signOut,
+  signOut
 } from '@firebase/auth'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -20,7 +19,7 @@ import { auth } from '../../API/firebase/firebase.API'
 import {
   sampleUserCurrentState,
   sampleUserSignIn,
-  sampleUserSignOut,
+  sampleUserSignOut
 } from '../../redux/modules/sample/sampleUserSlice'
 
 function SampleLogin() {
@@ -135,22 +134,12 @@ const SignIn = () => {
   const signRef = useRef({})
   const dispatch = useDispatch()
   const sampleUser = useSelector((state) => state.sampleUser)
-<<<<<<< HEAD
   //social login 로직입니다.
   //구글
   const onClickSignInWithGoogle = async () => {
     //2가지가 필요
     //하나는 구글에게 나 너희한테 가입한 구글 이메일로 로그인할거야 파이어베이스한테
     //로그인할때 필요한 UI가 있어야한다. firebase에서 UI들어있음
-=======
-
-  // social Login 로직입니다.
-  // Google로 로그인하는 함수
-  const onClickSignInWithGoogle = async () => {
-    // 2가지가 필요해요,
-    //하나는 google에게 나 너희한테 가입한 구글 이메일로 로그인할거야 firebase한테
-    // 로그인 할 때 필요한 UI가 있어야 한다 <-  firebase에서 social login 할 때의 UI 들어있음
->>>>>>> db595d8b9fbc44b46dcf041bad0c74cdfbbcc7ac
     try {
       const provider = new GoogleAuthProvider()
       const data = await signInWithPopup(auth, provider)
@@ -184,14 +173,7 @@ const SignIn = () => {
     } catch (error) {}
   }
 
-  const 깃허브로그인 = async () => {
-    try {
-      const provider = new GithubAuthProvider()
-      await signInWithPopup(auth, provider)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+
 
   useEffect(() => {
     onAuthStateChanged(auth, async (credential) => {
@@ -223,13 +205,8 @@ const SignIn = () => {
       <button onClick={() => onClickSignIn(signRef.current)}>
         로그인 버튼
       </button>
-<<<<<<< HEAD
-      <button onClick={onClickSignInWithGoogle}>구글이메일로그인</button>
-      <button onClick={깃허브로그인}>깃허브로그인</button>
-=======
       <button onClick={onClickSignInWithGoogle}>구글이메일 로그인</button>
       <button onClick={깃허브로그인}>깃허업 로그인</button>
->>>>>>> db595d8b9fbc44b46dcf041bad0c74cdfbbcc7ac
     </form>
   )
 }
