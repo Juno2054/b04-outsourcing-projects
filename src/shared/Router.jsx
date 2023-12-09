@@ -12,7 +12,7 @@ import SampleLogin from '../page/Sample/SampleLogin'
 import SampleDetail from '../page/Sample/SampleDetail'
 import SampleProfile from '../page/Sample/SampleProfile'
 import SampleKakao from '../page/Sample/SampleKakao'
-import Register from '../page/Register'
+import Register from '../page/register'
 
 // Page는 일단 6개이다.
 // Layout, Home, Detail,Login, Survey, Profile

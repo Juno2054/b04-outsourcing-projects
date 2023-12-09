@@ -9,7 +9,8 @@ import {
 } from 'firebase/storage'
 import { updateProfile } from 'firebase/auth'
 import { uuidv4 } from '@firebase/util'
-import { auth, storage } from '../../API/firebase/firebase.API'
+import { auth, storage, db } from '../../API/firebase/firebase.API'
+import { updateDoc, doc } from 'firebase/firestore'
 import { sampleUserUpdateProfile } from '../../redux/modules/sample/sampleUserSlice'
 function SampleProfile() {
   const [modal, setModal] = useState(false)
@@ -169,6 +170,14 @@ const SampleModal = ({ setModal }) => {
       그것을 다시 받아서 dispatch해주시면 좋겠습니다. 
       
       */
+      console.log(sampleUser.uid)
+      const userRef = doc(db, 'users', sampleUser.id)
+      await updateDoc(userRef, {
+        photoURL: downLoadUrl,
+        profilePhotoURLKey,
+        intro: inputRef.current.intro.value,
+      })
+
       dispatch(
         sampleUserUpdateProfile({
           photoURL: downLoadUrl,

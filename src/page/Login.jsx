@@ -6,6 +6,8 @@ import { auth } from '../API/firebase/firebase.API'
 import { signInWithEmailAndPassword, onAuthStateChanged } from '@firebase/auth'
 import { useDispatch, useSelector } from 'react-redux'
 import SocialLogin from './SocialLogin'
+import { collection, getDocs, query } from 'firebase/firestore'
+import { db } from '../API/firebase/firebase.API'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -13,7 +15,7 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const currentUser = useSelector((state) => state.loginSlice.currentUser)
-
+  console.log(currentUser)
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
@@ -22,6 +24,21 @@ const Login = () => {
         email,
         password
       )
+
+      const q = query(collection(db, 'users'))
+      const querySnapshot = await getDocs(q)
+
+      const initialUsers = []
+      let data
+      querySnapshot.forEach((doc) => {
+        data = {
+          id: doc.id,
+          ...doc.data(),
+        }
+      })
+
+      dispatch(userLogIn(data))
+
       // navigate를 /로 해준것은 최상위 부모 컴포넌트가 Layout이기 때문입니다. 왜냐면은 Layout이 다 감싸고 있기 때문입니다.
       navigate('/')
       // 여기 주석
@@ -37,7 +54,7 @@ const Login = () => {
       //파이어 베이스에서 데이터 읽기
       alert('로그인 성공')
       console.log('로그인 성공', currentUser)
-      navigate('/home')
+      // navigate('/home')
     } catch (error) {
       alert('로그인 실패', error.message)
       console.error('로그인 실패', error.message)
@@ -48,6 +65,27 @@ const Login = () => {
     navigate('/register')
   }
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const q = query(collection(db, 'users'))
+  //     const querySnapshot = await getDocs(q)
+
+  //     const initialUsers = []
+
+  //     querySnapshot.forEach((doc) => {
+  //       const data = {
+  //         id: doc.id,
+  //         ...doc.data(),
+  //       }
+  //       initialUsers.push(data)
+  //       console.log(doc.id)
+  //       console.log(doc.data())
+  //     })
+  //     dispatch(userLogIn(initialUsers))
+  //   }
+
+  //   fetchData()
+  // }, [])
   // 여기 주석
   // useEffect(() => {
   //   const unsubscribe = onAuthStateChanged(auth, (user) => {
