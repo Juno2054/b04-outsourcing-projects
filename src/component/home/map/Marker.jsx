@@ -74,7 +74,6 @@ function Marker({ onPositionChange }) {
         )}
         {position && <MapMarker position={position} />}
       </Map>
-      {position && <p>{'위도' + position.lat + '경도' + position.lng}</p>}
     </>
   )
 }

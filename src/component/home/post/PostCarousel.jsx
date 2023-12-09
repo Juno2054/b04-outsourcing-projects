@@ -58,6 +58,8 @@ const Message = styled.p`
 const SliderContainer = styled.div`
   width: 100%;
   position: relative;
+  margin-top: 10px;
+  margin-bottom: 10px;
 `
 
 const SlideList = styled.ul`
@@ -78,18 +80,17 @@ const SliderButton = styled.button`
   transform: translateY(-50%);
   background-color: transparent;
   border: none;
-  font-size: 18px;
   font-weight: bold;
   cursor: pointer;
   color: #ea3267;
 `
 
 const PrevButton = styled(SliderButton)`
-  font-size: 50px;
+  font-size: 40px;
   left: 10px;
 `
 
 const NextButton = styled(SliderButton)`
-  font-size: 50px;
+  font-size: 40px;
   right: 10px;
 `

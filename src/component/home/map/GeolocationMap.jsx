@@ -70,7 +70,18 @@ const GeolocationMap = () => {
         onMouseOut={() => setIsVisible(false)}
       >
         {isVisible && (
-          <div style={{ padding: '5px', color: '#000' }}>{content}</div>
+          <div
+            style={{
+              padding: '5px',
+              color: '#000',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              maxWidth: '200px',
+            }}
+          >
+            {content}
+          </div>
         )}
       </MapMarker>
     )
