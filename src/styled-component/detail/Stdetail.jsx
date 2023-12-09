@@ -8,6 +8,7 @@ export const Container = styled.div`
   flex-direction: column;
   width: 90%;
   margin: 0 auto;
+  max-width: 1200px;
   margin-bottom: 300px;
   /* md 768 */
   ${({ theme }) => theme.mediaQuery.md`
@@ -134,7 +135,18 @@ export const ContentList = styled.div`
   img {
     flex: 1;
     object-fit: contain;
-    width: 100%;
+    width: 50px;
+  }
+`
+export const ContentListNewReview = styled.div`
+  border-bottom: 1px solid black;
+  min-height: 52px;
+  padding: 40px 40px 40px 40px;
+  flex-direction: row;
+
+  img {
+    flex: 1;
+    width: 50px;
   }
 `
 export const ContentListProfile = styled.div`
@@ -152,6 +164,49 @@ export const ContentListProfile = styled.div`
 export const ContentListReview = styled.div`
   display: flex;
   justify-content: left;
+`
+export const ContentListReviewComment = styled.div`
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+`
+export const ContentCommentList = styled.div`
+  display: flex;
+  justify-content: left;
+  border-bottom: 1px solid black;
+  padding: 20px 0px 20px 0px;
+  img {
+    width: 100%;
+    max-width: 120px;
+    text-align: center;
+    align-items: center;
+    margin-right: 20px;
+  }
+  button {
+    background-color: #ea3267;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    margin: 0px 10px 10px;
+    padding: 5px;
+    font-size: 16px;
+    transition: 1ms all;
+    &:hover {
+      background-color: #9f113a;
+    }
+    &:active {
+      background-color: #330411;
+    }
+  }
+`
+export const ContentList2 = styled.div`
+  padding: 10px 0px 10px 0px;
+  text-align: left;
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: bold;
 `
 export const ContentList1 = styled.div`
   text-align: left;
@@ -179,7 +234,7 @@ export const ContentList1 = styled.div`
     color: rgb(37, 37, 37);
     width: 200px;
     font-size: 14px;
-    bottom: -52px;
+    bottom: -5px;
     border-radius: 4px;
     z-index: 1;
   }
@@ -225,13 +280,14 @@ export const ContentImg = styled.img`
   width: 100%;
   height: 300px;
 `
-export const ReviewTeaxtArea = styled.textarea`
+export const ReviewTextArea = styled.textarea`
   width: 100%;
   height: 100px;
   margin-top: 10px;
   padding: 10px;
   border: 1px solid #f2f2f2;
   resize: none;
+  font-size: 20px;
 `
 export const Button = styled.button`
   width: 100px;
@@ -248,8 +304,20 @@ export const Button = styled.button`
 `
 export const P = styled.p`
   padding-top: 10px;
-  font-size: 16px;
+  font-size: 20px;
   height: 23px;
   align-items: left;
   color: white;
+`
+export const Input = styled.input`
+  width: 100%;
+  height: 50px;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #f2f2f2;
+  resize: none;
+  font-size: 20px;
+`
+export const FlexDiv1 = styled.div`
+  flex: 0 0 65%;
 `

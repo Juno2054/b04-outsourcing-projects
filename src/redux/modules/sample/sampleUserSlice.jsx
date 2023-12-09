@@ -35,6 +35,7 @@ const sampleUser = createSlice({
     },
     sampleUserCurrentState(state, { payload }) {
       state.currentUser = payload
+      console.log(state.currentUser)
     },
     sampleUserUpdateProfile(state, { payload }) {
       state.photoURL = payload.photoURL
