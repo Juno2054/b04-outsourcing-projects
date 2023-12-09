@@ -9,7 +9,8 @@ import {
 } from 'firebase/storage'
 import { updateProfile } from 'firebase/auth'
 import { uuidv4 } from '@firebase/util'
-import { auth, storage } from '../../API/firebase/firebase.API'
+import { auth, storage, db } from '../../API/firebase/firebase.API'
+import { updateDoc, doc } from 'firebase/firestore'
 import { sampleUserUpdateProfile } from '../../redux/modules/sample/sampleUserSlice'
 function SampleProfile() {
   const [modal, setModal] = useState(false)
@@ -158,6 +159,25 @@ const SampleModal = ({ setModal }) => {
       await updateProfileOnFireBase(downLoadUrl)
       console.log(inputRef.current.intro.value)
       console.log(profilePhotoURLKey)
+      // 길훈님 여기서 하는 겁니다.
+
+      /*
+      upDateDoc( uid )
+      downLoadUrl -  profile사진 url 입니다.
+      profilePhotoURLKey
+      inputRef.current.intro.value
+      firebase에 올리고 
+      그것을 다시 받아서 dispatch해주시면 좋겠습니다. 
+      
+      */
+      console.log(sampleUser.uid)
+      const userRef = doc(db, 'users', sampleUser.id)
+      await updateDoc(userRef, {
+        photoURL: downLoadUrl,
+        profilePhotoURLKey,
+        intro: inputRef.current.intro.value,
+      })
+
       dispatch(
         sampleUserUpdateProfile({
           photoURL: downLoadUrl,

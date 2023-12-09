@@ -1,15 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
 import {
+  GithubAuthProvider,
+  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  signOut,
-  GoogleAuthProvider,
   signInWithPopup,
-  GithubAuthProvider,
+  signOut,
 } from '@firebase/auth'
+import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
 import { auth } from '../../API/firebase/firebase.API'
 import {
   sampleUserCurrentState,
@@ -129,10 +129,11 @@ const SignIn = () => {
   const sampleUser = useSelector((state) => state.sampleUser)
 
   //소셜 로그인 로직
-  const onClickSingInWithGoogel = async () => {
-    //2가지가 필요, 하나는 구글한테 나 너희한테 가입한 구글 이메일로 로그인할거야
-    //파이어 베이스한테
-    //로그인 할때 필요한 ui가 있어야 함  파이어베이스에 들어있음
+  // Google Login
+  const onClickSignInWithGoogle = async () => {
+    //2가지 필요
+    //1. google에게 나 너희한테 가입한 구글 이메일로 로그인할거야 firebase한테
+    //로그인 할 때 필요한 UI가 있어야 한다. <- firebase에서 social login 할 때의 UI 들어있음
     try {
       const provider = new GoogleAuthProvider()
       const data = await signInWithPopup(auth, provider)
@@ -141,14 +142,7 @@ const SignIn = () => {
       console.log(error)
     }
   }
-  // 깃허브 로그인
-  const 깃허브 = async () => {
-    try {
-      const provider = new GithubAuthProvider()
-      const data = await signInWithPopup(auth, provider)
-      console.log(data)
-    } catch (error) {}
-  }
+  const onClickSignIN = async (userInfo) => {}
 
   const onClickSignIn = async (userInfo) => {
     if (sampleUser.currentUser) return alert('이미 로그인 되어있어요')
@@ -162,6 +156,18 @@ const SignIn = () => {
       // user의 정보를 넣어주어 state변경하려고요!!
       dispatch(sampleUserCurrentState(true))
       console.log(validUser)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const conClickSignIn = async (userInfo) => {}
+  //github 로그인 함수
+  const onClickSignInWithGithub = async () => {
+    try {
+      const provider = new GithubAuthProvider()
+      const data = await signInWithPopup(auth, provider)
+      console.log(data)
     } catch (error) {
       console.log(error)
     }
@@ -198,8 +204,8 @@ const SignIn = () => {
       <button onClick={() => onClickSignIn(signRef.current)}>
         로그인 버튼
       </button>
-      <button onClick={onClickSingInWithGoogel}>구글 로그인</button>
-      <button onClick={깃허브}>깃헙 로그인</button>
+      <button onClick={onClickSignInWithGoogle}>구글이메일 로그인</button>
+      <button onClick={onClickSignInWithGithub}>깃헙 로그인</button>
     </form>
   )
 }

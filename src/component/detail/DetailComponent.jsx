@@ -5,25 +5,31 @@ import {
   getDoc,
   getDocs,
   orderBy,
+  query,
   setDoc,
   updateDoc,
 } from 'firebase/firestore'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 import { db } from '../../API/firebase/firebase.API'
 import { setCommentslist } from '../../redux/modules/home/postsSlice'
 import * as St from '../../styled-component/detail/Stdetail'
 
 function DetailComponent({ post }) {
+  const mainPost = post
+  const { paramsId } = useParams()
   const inputRef = useRef()
   const dispatch = useDispatch()
   const [selectStar, setSelectStar] = useState(null)
   const [isOpened, setIsOpened] = useState(false)
+  const [addressData, setAddressData] = useState([])
+  const user = useSelector((state) => state.loginSlice) //로그인 유저 정보
   const handleStarChange = (starValue) => {
     setSelectStar(starValue)
     setIsOpened(false)
   }
-
+  const clickedLocation = addressData.clickedLocation
   const [selectedCommentId, setSelectedCommentId] = useState(null)
   //취소할때 리뷰 임시저장
   const [originalContent, setOriginalContent] = useState('')
@@ -33,7 +39,7 @@ function DetailComponent({ post }) {
     setOriginalContent(selectedComment.content)
     setSelectedCommentId(id)
   }
-  const [setInputRef, setSetInputRef] = useState('')
+
   // 날짜 함수
   function formatDate(dateString) {
     const date = new Date(dateString)
@@ -50,21 +56,54 @@ function DetailComponent({ post }) {
 
     return date.toLocaleString('ko-KR', options)
   }
-
+  useEffect(() => {
+    const loginUser = async (db) => {
+      try {
+        const docRef = await doc(db, 'users')
+        console.log('유저데이터', docRef)
+        const docSnap = await getDoc(docRef)
+        if (docSnap.exists()) {
+          console.log('유저데이터', docSnap.data())
+        } else {
+          console.log('없음')
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    loginUser()
+  }, [user.uid])
   const [reviewsCommentslist, setReviewsCommentslist] = useState([])
+  useEffect(() => {
+    async function fetchDataFromFirebase(db) {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'posts'))
+        querySnapshot.forEach((doc) => {
+          console.log(' 데이터 가져오기 성공2222222:', doc.data())
+          setAddressData(doc.data(posts))
+        })
+        console.log('파이어베이스 데이터 가져오기 성공1111111:', addressData)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchDataFromFirebase(db)
+  }, [])
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(
+        const queryDb = await query(
           collection(db, 'reviewsCommentslist'),
           orderBy('timestamp')
         )
+        console.log('쿼리', queryDb)
+        const querySnapshot = await getDocs(queryDb)
+        console.log('쿼리스냅샷', querySnapshot)
         const fetchedPosts = []
         querySnapshot.forEach((doc) => {
           fetchedPosts.push({ id: doc.id, ...doc.data() })
         })
         await dispatch(setCommentslist(fetchedPosts))
-        setCommentslist(fetchedPosts)
         setReviewsCommentslist(fetchedPosts)
         console.log('파이어베이스 데이터 가져오기 성공:', fetchedPosts)
       } catch (error) {
@@ -72,7 +111,7 @@ function DetailComponent({ post }) {
       }
     }
     fetchData()
-  }, [dispatch])
+  }, [dispatch, mainPost])
   const posts = useSelector((state) => state.postsSlice.reviewsCommentslist)
   console.log('posts  리덕스 스토어에서 가져온거', posts)
   const [textArea, setTextArea] = useState('')
@@ -91,11 +130,13 @@ function DetailComponent({ post }) {
 
       console.log('파이어베이스db', docRef)
       await setDoc(docRef, {
-        contentId: 'asdf12', //콘텐트아이디
+        contentId: mainPost.id, //콘텐트아이디
         content: textArea, //코멘트
         rating: selectStar, //별점
-        title: '타이틀', //이름? 제목?
+        title: user.displayName ? user.displayName : '기본이름', //이름? 제목?
         timestamp: formatDate(new Date()), //날짜
+        uid: user.uid, //유저아이디
+        userImage: user.photoURL, // 사용자 이미지 URL
       })
       console.log('파이어베이스db', docRef.id)
       setTextArea('')
@@ -159,19 +200,26 @@ function DetailComponent({ post }) {
     // setTextArea(originalContent)
     setSelectedCommentId(null)
   }
+  const handleMapClick = () => {
+    const url = clickedLocation.place_url
+    window.open(url)
+    console.log('url', url)
+  }
 
   return (
     <St.Container>
       {/* 상단에는 지도에 있는 좌표 이름 과 장소 이미지? */}
+      {console.log('확용', clickedLocation)}
       <St.TopDiv>
         <St.TopImg />
         <St.TopFlexDiv>
           <St.TopDiv2>
-            <St.Title> 어떤 어떤 맛있는 집인듯? </St.Title>
+            <St.Title> {clickedLocation.place_name} </St.Title>
 
             <St.FlexDiv>
               <St.FlexDivMenu>
                 <St.FlexDivMenuImg
+                  onClick={handleMapClick}
                   src={
                     process.env.PUBLIC_URL + '/asset/img/detaill/ico/지도.png'
                   }
@@ -207,12 +255,16 @@ function DetailComponent({ post }) {
         <St.H2> 상세정보</St.H2>
         <St.MediumDiv2>
           {/* <div>{posts.title}</div> */}
-          주소 : 서울 용산구 이태원로 189 1층 (우)04350
+          주소 :
+          {clickedLocation.address_name
+            ? clickedLocation.address_name
+            : '주소없음'}
+          {`(${clickedLocation.road_address_name})`}
         </St.MediumDiv2>
         <St.MediumDiv2>영업시간 : 매일 10:00 ~ 21:30</St.MediumDiv2>
         <St.MediumDiv2>대표번호 : 02-796-1244</St.MediumDiv2>
         <St.MediumDiv2>
-          시설정보
+          시설정보 {clickedLocation.category_group_name}
           <St.MediumDiv2>동물출입가능</St.MediumDiv2>
           <St.MediumDiv2>흡연실</St.MediumDiv2>
         </St.MediumDiv2>
@@ -222,12 +274,18 @@ function DetailComponent({ post }) {
         <form action="">
           <St.ContentListReview>
             <St.ContentListProfile>
-              <img
-                src={
-                  process.env.PUBLIC_URL + '/asset/img/detaill/ico/프로필.png'
-                }
-                alt=""
-              />
+              {
+                <>
+                  {console.log(user.photoURL)}
+                  <img
+                    src={
+                      process.env.PUBLIC_URL +
+                      '/asset/img/detaill/ico/프로필.png'
+                    }
+                    alt=""
+                  />
+                </>
+              }
             </St.ContentListProfile>
 
             <St.ContentListNewReview
@@ -235,7 +293,9 @@ function DetailComponent({ post }) {
             >
               <St.ContentList1>
                 {' '}
-                로그인유저닉네임 님 리뷰를 남겨보세요!!{' '}
+                <p>
+                  <span>{user.displayName}</span> 님 리뷰를 남겨보세요!!{' '}
+                </p>
               </St.ContentList1>
               {
                 <>
@@ -320,7 +380,7 @@ function DetailComponent({ post }) {
           </St.ContentList>
           <St.ContentList>
             <p>
-              전체 <span style={{ color: 'blue' }}>1</span>
+              전체 <span style={{ color: 'blue' }}>{1}</span>
             </p>
           </St.ContentList>
           <St.ContentList>별점 4.3점⭐⭐⭐⭐</St.ContentList>
@@ -328,102 +388,102 @@ function DetailComponent({ post }) {
         <St.ContentListReviewComment>
           {/* 댓글 */}
           {/* 이 아래로 주석처리하니 에러 멈춤 */}
-          {posts.map((comment, index) => {
-            return (
-              <>
-                <St.ContentCommentList key={posts[index].id}>
-                  <img
-                    src={
-                      process.env.PUBLIC_URL +
-                      '/asset/img/detaill/ico/프로필.png'
-                    }
-                    alt=""
-                  />
-                  <St.FlexDiv1>
-                    <St.ContentList2 style={{ paddingBottom: '2px' }}>
-                      {'⭐'.repeat(posts[index].rating)}
-                    </St.ContentList2>
-                    <St.ContentList2>
-                      {posts[index].title} {posts[index].timestamp}
-                    </St.ContentList2>
-                    {selectedCommentId === comment.id ? (
-                      <St.Input
-                        ref={inputRef}
-                        type="text"
-                        defaultValue={posts[index].content}
-                        onBlur={(e) =>
-                          handleUpdate({ content: e.target.value })
-                        }
-                      />
-                    ) : (
-                      <St.ContentList2>{posts[index].content}</St.ContentList2>
-                    )}
-                  </St.FlexDiv1>
-                  <div
-                    style={{
-                      flexGrow: '5',
-                      textAlign: 'right',
-                      paddingRight: '30px',
-                    }}
-                  >
-                    {selectedCommentId === comment.id ? (
-                      <>
-                        <button
-                          onClick={() => {
-                            const updataedData = {
-                              content: inputRef.current.value,
-                            }
-                            console.log('업데이트 데이터포스트', posts)
-                            console.log('업데이트 데이터버튼쪽', updataedData)
-                            console.log(
-                              '업데이트 데이터',
-                              comment.id,
-                              updataedData
-                            )
-                            handleUpdate(comment.id, updataedData)
-                          }}
-                        >
-                          수정완료
-                        </button>
-                        {/* 수정 상태에서 취소 누르면 되돌아감 */}
-                        <button
-                          onClick={() => {
-                            handleCancel(originalContent)
-                          }}
-                        >
-                          취소
-                        </button>
-                        <button
-                          onClick={() => {
-                            const updataedData = {
-                              content: inputRef.current.value,
-                            }
-                            selectComment(comment.id)
-                            handleDelete(comment.id, updataedData)
+          {posts
+            .filter((comment) => comment.contentId === paramsId)
+            .map((comment, index) => {
+              return (
+                <>
+                  <St.ContentCommentList key={posts[index].id}>
+                    <img
+                      src={
+                        process.env.PUBLIC_URL +
+                        '/asset/img/detaill/ico/프로필.png'
+                      }
+                      alt=""
+                    />
+                    <St.FlexDiv1>
+                      <St.ContentList2 style={{ paddingBottom: '2px' }}>
+                        {'⭐'.repeat(posts[index].rating)}
+                      </St.ContentList2>
+                      <St.ContentList2>
+                        {posts[index].title} {posts[index].timestamp}
+                      </St.ContentList2>
+                      {selectedCommentId === comment.id ? (
+                        <St.Input
+                          ref={inputRef}
+                          type="text"
+                          defaultValue={posts[index].content}
+                          onBlur={(e) =>
+                            handleUpdate({ content: e.target.value })
+                          }
+                        />
+                      ) : (
+                        <St.ContentList2>
+                          {posts[index].content}
+                        </St.ContentList2>
+                      )}
+                    </St.FlexDiv1>
+                    {user.uid === comment.uid && (
+                      <div
+                        style={{
+                          flexGrow: '5',
+                          textAlign: 'right',
+                          paddingRight: '30px',
+                        }}
+                      >
+                        {selectedCommentId === comment.id ? (
+                          <>
+                            {/* 수정버튼 */}
+                            <button
+                              onClick={() => {
+                                const updataedData = {
+                                  content: inputRef.current.value,
+                                }
+                                handleUpdate(comment.id, updataedData)
+                              }}
+                            >
+                              수정완료
+                            </button>
+                            {/* 수정 상태에서 취소 누르면 되돌아감 */}
+                            <button
+                              onClick={() => {
+                                handleCancel(originalContent)
+                              }}
+                            >
+                              취소
+                            </button>
+                            <button
+                              onClick={() => {
+                                const updataedData = {
+                                  content: inputRef.current.value,
+                                }
+                                selectComment(comment.id)
+                                handleDelete(comment.id, updataedData)
 
-                            console.log('삭제한 코멘트 아이디', comment.id)
-                          }}
-                        >
-                          삭제
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => {
-                            selectComment(comment.id)
-                            console.log('선택한 코멘트 아이디', comment.id)
-                          }}
-                        >
-                          수정
-                        </button>
-                      </>
+                                console.log('삭제한 코멘트 아이디', comment.id)
+                              }}
+                            >
+                              삭제
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              onClick={() => {
+                                selectComment(comment.id)
+                                console.log('선택한 코멘트 아이디', comment.id)
+                              }}
+                            >
+                              수정
+                            </button>
+                          </>
+                        )}
+                      </div>
                     )}
-                  </div>
-                </St.ContentCommentList>
-              </>
-            )
-          })}
+                  </St.ContentCommentList>
+                </>
+              )
+            })}
         </St.ContentListReviewComment>
       </St.BottomDiv>
     </St.Container>

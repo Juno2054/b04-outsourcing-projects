@@ -1,18 +1,20 @@
+import { onAuthStateChanged, signInWithEmailAndPassword } from '@firebase/auth'
+import { collection, getDocs, query } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
-import * as St from '../styled-component/login/loginStyle'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
+import { auth, db } from '../API/firebase/firebase.API'
 import { userLogIn } from '../redux/modules/login/loginSlice'
-import { auth } from '../API/firebase/firebase.API'
-import { signInWithEmailAndPassword, onAuthStateChanged } from '@firebase/auth'
-import { useDispatch } from 'react-redux'
+import * as St from '../styled-component/login/loginStyle'
 import SocialLogin from './SocialLogin'
 
 const Login = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-
+  const [email, setEmail] = useState('as1@test.com')
+  const [password, setPassword] = useState('asdf12')
+  const currentUser = useSelector((state) => state.loginSlice.currentUser)
+  console.log(currentUser)
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
@@ -22,20 +24,38 @@ const Login = () => {
         password
       )
 
-      const user = userCredential.user
-      dispatch(
-        userLogIn({
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-        })
-      )
+      const q = query(collection(db, 'users'))
+      const querySnapshot = await getDocs(q)
+
+      const initialUsers = []
+      let data
+      querySnapshot.forEach((doc) => {
+        data = {
+          id: doc.id,
+          ...doc.data(),
+        }
+      })
+
+      dispatch(userLogIn(data))
+
+      // navigate를 /로 해준것은 최상위 부모 컴포넌트가 Layout이기 때문입니다. 왜냐면은 Layout이 다 감싸고 있기 때문입니다.
+      navigate('/')
+      // 여기 주석
+      // const user = userCredential.user
+      // dispatch(
+      //   userLogIn({
+      //     uid: user.uid,
+      //     email: user.email,
+      //     displayName: user.displayName,
+      //     photoURL: user.photoURL,
+      //   })
+      // )
+      //파이어 베이스에서 데이터 읽기
       alert('로그인 성공')
-      console.log('로그인 성공', user)
-      navigate('/home')
+      console.log('로그인 성공', currentUser)
+      // navigate('/home')
     } catch (error) {
-      alert('로그인 실패')
+      alert('로그인 실패', error.message)
       console.error('로그인 실패', error.message)
     }
   }
@@ -60,12 +80,13 @@ const Login = () => {
         console.log(user)
       }
     })
+  })
 
-    // Clean-up 함수 등록
-    return () => {
-      unsubscribe()
-    }
-  }, [dispatch, navigate])
+  //   // Clean-up 함수 등록
+  //   return () => {
+  //     unsubscribe()
+  //   }
+  // }, [dispatch, navigate])
 
   return (
     <St.LoginContainer>
