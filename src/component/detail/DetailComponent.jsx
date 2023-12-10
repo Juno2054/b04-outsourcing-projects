@@ -23,13 +23,15 @@ function DetailComponent({ post }) {
   const dispatch = useDispatch()
   const [selectStar, setSelectStar] = useState(null)
   const [isOpened, setIsOpened] = useState(false)
-  const [addressData, setAddressData] = useState([])
+  const [addressData, setAddressData] = useState(null)
   const user = useSelector((state) => state.loginSlice) //로그인 유저 정보
   const handleStarChange = (starValue) => {
     setSelectStar(starValue)
     setIsOpened(false)
   }
-  const clickedLocation = addressData.clickedLocation
+
+  console.log('파람스아이디', paramsId)
+  const clickedLocation = addressData?.clickedLocation
   const [selectedCommentId, setSelectedCommentId] = useState(null)
   //취소할때 리뷰 임시저장
   const [originalContent, setOriginalContent] = useState('')
@@ -73,11 +75,14 @@ function DetailComponent({ post }) {
     }
     loginUser()
   }, [user.uid])
+
   const [reviewsCommentslist, setReviewsCommentslist] = useState([])
+  //메인페이지 데이터
   useEffect(() => {
     async function fetchDataFromFirebase(db) {
       try {
         const querySnapshot = await getDocs(collection(db, 'posts'))
+        console.log('쿼리스냅샷', querySnapshot)
         querySnapshot.forEach((doc) => {
           console.log(' 데이터 가져오기 성공2222222:', doc.data())
           setAddressData(doc.data(posts))
@@ -200,21 +205,38 @@ function DetailComponent({ post }) {
     // setTextArea(originalContent)
     setSelectedCommentId(null)
   }
+  //지도
   const handleMapClick = () => {
-    const url = clickedLocation.place_url
-    window.open(url)
-    console.log('url', url)
+    const url = clickedLocation?.place_url
+    const parts = url.split('/')
+    const placeId = parts[parts.length - 1]
+    console.log('placeId', placeId)
+    window.open('url', url)
   }
-
+  // 길찾기
+  const handleRodeClick = () => {
+    const place = clickedLocation?.place_name
+    const placePosition = clickedLocation?.position
+    const rodeUrl = `https://map.kakao.com/link/to/${place},${placePosition?.lat},${placePosition?.lng}`
+    window.open(rodeUrl)
+  }
+  const filteredComments = posts.filter(
+    (comment) => comment.contentId === paramsId
+  )
   return (
     <St.Container>
       {/* 상단에는 지도에 있는 좌표 이름 과 장소 이미지? */}
-      {console.log('확용', clickedLocation)}
+      {/* {console.log('확용', clickedLocation)} */}
       <St.TopDiv>
         <St.TopImg />
         <St.TopFlexDiv>
           <St.TopDiv2>
-            <St.Title> {clickedLocation.place_name} </St.Title>
+            <St.Title>
+              {' '}
+              {clickedLocation?.place_name
+                ? clickedLocation?.place_name
+                : '제목없음'}{' '}
+            </St.Title>
 
             <St.FlexDiv>
               <St.FlexDivMenu>
@@ -229,6 +251,7 @@ function DetailComponent({ post }) {
               </St.FlexDivMenu>
               <St.FlexDivMenu>
                 <St.FlexDivMenuImg
+                  onClick={handleRodeClick}
                   src={
                     process.env.PUBLIC_URL + '/asset/img/detaill/ico/길찾기.png'
                   }
@@ -255,16 +278,23 @@ function DetailComponent({ post }) {
         <St.H2> 상세정보</St.H2>
         <St.MediumDiv2>
           {/* <div>{posts.title}</div> */}
+          {/* 일반주소 */}
           주소 :
-          {clickedLocation.address_name
-            ? clickedLocation.address_name
+          {clickedLocation?.address_name
+            ? clickedLocation?.address_name
             : '주소없음'}
-          {`(${clickedLocation.road_address_name})`}
+          {`(${
+            clickedLocation?.road_address_name
+              ? clickedLocation?.road_address_name
+              : '주소없음'
+          })
+          `}
+          {/* 도로명주소 */}
         </St.MediumDiv2>
         <St.MediumDiv2>영업시간 : 매일 10:00 ~ 21:30</St.MediumDiv2>
         <St.MediumDiv2>대표번호 : 02-796-1244</St.MediumDiv2>
         <St.MediumDiv2>
-          시설정보 {clickedLocation.category_group_name}
+          시설정보 {clickedLocation?.category_group_name}
           <St.MediumDiv2>동물출입가능</St.MediumDiv2>
           <St.MediumDiv2>흡연실</St.MediumDiv2>
         </St.MediumDiv2>
@@ -272,82 +302,86 @@ function DetailComponent({ post }) {
       {/* 하단에는 리뷰? 별점? 평점? */}
       <St.BottomDiv>
         <form action="">
-          <St.ContentListReview>
-            <St.ContentListProfile>
-              {
-                <>
-                  {console.log(user.photoURL)}
-                  <img
-                    src={
-                      process.env.PUBLIC_URL +
-                      '/asset/img/detaill/ico/프로필.png'
-                    }
-                    alt=""
-                  />
-                </>
-              }
-            </St.ContentListProfile>
+          {/* 유저 이름 없으면 리뷰작성 불가하게 가림  */}
+          {user.displayName ? (
+            <St.ContentListReview>
+              <St.ContentListProfile>
+                {
+                  <>
+                    {console.log(user.photoURL)}
+                    <img
+                      src={
+                        process.env.PUBLIC_URL +
+                        '/asset/img/detaill/ico/프로필.png'
+                      }
+                      alt=""
+                    />
+                  </>
+                }
+              </St.ContentListProfile>
 
-            <St.ContentListNewReview
-              style={{ flexGrow: 2, padding: '30px 0 30px 30px' }}
-            >
-              <St.ContentList1>
-                {' '}
-                <p>
-                  <span>{user.displayName}</span> 님 리뷰를 남겨보세요!!{' '}
-                </p>
-              </St.ContentList1>
-              {
-                <>
-                  <St.ContentList1 style={{ flexGrow: 6 }}>
-                    <St.selectStarBox onClick={handleToggle}>
-                      <span onClick={handleToggle}>
-                        {selectStar
-                          ? `${selectStar}  ${'⭐'.repeat(selectStar)}`
-                          : '별점선택하세요'}
-                      </span>
-                      <label>{'▾'}</label>
-                    </St.selectStarBox>
-                  </St.ContentList1>
-                  {
-                    <St.ContentList1 isOpen={isOpened}>
-                      <ul>
-                        {[...Array(5)].map((star, index) => {
-                          const starValue = index + 1
-                          return (
-                            <li
-                              key={index}
-                              onClick={() => handleStarChange(starValue)}
-                            >
-                              <label key={index}>
-                                <option value={starValue}>
-                                  <p>{starValue}</p>
-                                  {[...Array(starValue)].map((n, index) => {
-                                    return <span>⭐</span>
-                                  })}
-                                </option>
-                              </label>
-                            </li>
-                          )
-                        })}
-                      </ul>
+              <St.ContentListNewReview
+                style={{ flexGrow: 2, padding: '30px 0 30px 30px' }}
+              >
+                <St.ContentList1>
+                  <p>
+                    <span>{user.displayName}</span> 님 리뷰를 남겨보세요!!{' '}
+                  </p>
+                </St.ContentList1>
+                {
+                  <>
+                    <St.ContentList1 style={{ flexGrow: 6 }}>
+                      <St.selectStarBox onClick={handleToggle}>
+                        <span onClick={handleToggle}>
+                          {selectStar
+                            ? `${selectStar}  ${'⭐'.repeat(selectStar)}`
+                            : '별점선택하세요'}
+                        </span>
+                        <label>{'▾'}</label>
+                      </St.selectStarBox>
                     </St.ContentList1>
-                  }
-                </>
-              }
-              <St.ContentListInput>
-                <St.ReviewTextArea
-                  value={textArea}
-                  onChange={(e) => setTextArea(e.target.value)}
-                  placeholder="리뷰를 작성해주세요"
-                />
-                {console.log(textArea)}
-                <St.Button type="button" onClick={submitPost}>
-                  등 록!
-                </St.Button>
-              </St.ContentListInput>
-            </St.ContentListNewReview>
-          </St.ContentListReview>
+                    {
+                      <St.ContentList1 isOpen={isOpened}>
+                        <ul>
+                          {[...Array(5)].map((star, index) => {
+                            const starValue = index + 1
+                            return (
+                              <li
+                                key={index}
+                                onClick={() => handleStarChange(starValue)}
+                              >
+                                <label key={index}>
+                                  <option value={starValue}>
+                                    <p>{starValue}</p>
+                                    {[...Array(starValue)].map((n, index) => {
+                                      return <span>⭐</span>
+                                    })}
+                                  </option>
+                                </label>
+                              </li>
+                            )
+                          })}
+                        </ul>
+                      </St.ContentList1>
+                    }
+                  </>
+                }
+                <St.ContentListInput>
+                  <St.ReviewTextArea
+                    value={textArea}
+                    onChange={(e) => setTextArea(e.target.value)}
+                    placeholder="리뷰를 작성해주세요"
+                  />
+                  {console.log(textArea)}
+                  <St.Button type="button" onClick={submitPost}>
+                    등 록!
+                  </St.Button>
+                </St.ContentListInput>
+              </St.ContentListNewReview>
+            </St.ContentListReview>
+          ) : (
+            ''
+          )}
         </form>
         <St.ContentDiv>
           <St.ContentList>
@@ -379,21 +413,30 @@ function DetailComponent({ post }) {
             </St.ContentImgBox>
           </St.ContentList>
           <St.ContentList>
+            {/* 리뷰 갯수  */}
             <p>
-              전체 <span style={{ color: 'blue' }}>{1}</span>
+              전체{' '}
+              <span style={{ color: 'blue' }}>{filteredComments.length}</span>
             </p>
           </St.ContentList>
-          <St.ContentList>별점 4.3점⭐⭐⭐⭐</St.ContentList>
+          <St.ContentList>
+            별점 {'⭐'.repeat(addressData?.rating - 1)}
+          </St.ContentList>
         </St.ContentDiv>
         <St.ContentListReviewComment>
           {/* 댓글 */}
-          {/* 이 아래로 주석처리하니 에러 멈춤 */}
+          {/* 필터로 게시글아이디와 파람스아이디와 같은지 비교 */}
+          {/* 맞는애들만 맵으로 하나씩 꺼내옴  */}
           {posts
-            .filter((comment) => comment.contentId === paramsId)
+            .filter((comment) => {
+              console.log(comment.contentId, paramsId)
+              return comment.contentId === paramsId
+            })
             .map((comment, index) => {
+              console.log('dd', comment.contentId)
               return (
                 <>
-                  <St.ContentCommentList key={posts[index].id}>
+                  <St.ContentCommentList key={comment.id}>
                     <img
                       src={
                         process.env.PUBLIC_URL +
@@ -403,24 +446,22 @@ function DetailComponent({ post }) {
                     />
                     <St.FlexDiv1>
                       <St.ContentList2 style={{ paddingBottom: '2px' }}>
-                        {'⭐'.repeat(posts[index].rating)}
+                        {'⭐'.repeat(comment.rating)}
                       </St.ContentList2>
                       <St.ContentList2>
-                        {posts[index].title} {posts[index].timestamp}
+                        {comment.title} {comment.timestamp}
                       </St.ContentList2>
                       {selectedCommentId === comment.id ? (
                         <St.Input
                           ref={inputRef}
                           type="text"
-                          defaultValue={posts[index].content}
+                          defaultValue={comment.content}
                           onBlur={(e) =>
                             handleUpdate({ content: e.target.value })
                           }
                         />
                       ) : (
-                        <St.ContentList2>
-                          {posts[index].content}
-                        </St.ContentList2>
+                        <St.ContentList2>{comment.content}</St.ContentList2>
                       )}
                     </St.FlexDiv1>
                     {user.uid === comment.uid && (
