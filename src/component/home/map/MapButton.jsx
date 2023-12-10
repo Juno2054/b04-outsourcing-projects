@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { db } from '../../../API/firebase/firebase.API'
 import {
   setMapPlaces,
-  setSelectedButton,
+  setSelectedButton
 } from '../../../redux/modules/home/mapPlaceSlice'
 
 function MapButton() {
@@ -63,21 +63,23 @@ const MapSection = styled.section`
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 20px;
+  /* padding-top: 10px; */
+  border:1px solid blue;
 `
 
 const ButtonWrapper = styled.div`
-  margin-bottom: 10px;
-  padding: 5px;
+  /* margin-bottom: 10px; */
+  padding: 10px;
 `
 
 const Button = styled.button`
   margin: 0;
-  padding: 10px 20px;
+  /* padding: 10px 20px; */
+  padding:10px;
   background-color: ${(props) => (props.selected ? '#f20b4c' : '#e04b76')};
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
 
