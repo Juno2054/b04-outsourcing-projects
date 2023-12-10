@@ -42,7 +42,7 @@ function Layout() {
       }
     })
 
-    // Clean-up 함수 등록
+   
     return () => {
       unsubscribe()
     }

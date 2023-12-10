@@ -23,7 +23,6 @@ const Login = () => {
         email,
         password
       )
-      // userCredential.user.uid를 추가한 이유는 users안에 있는 모든 데이터중 경로가 userCredential.user.uid인 사람의 데이터만 가져와 주세요 라는 의미이기 때문입니다.
       const q = query(collection(db, 'users'), userCredential.user.uid)
       const querySnapshot = await getDocs(q)
 
@@ -37,22 +36,12 @@ const Login = () => {
 
       dispatch(userLogIn(data))
 
-      // navigate를 /로 해준것은 최상위 부모 컴포넌트가 Layout이기 때문입니다. 왜냐면은 Layout이 다 감싸고 있기 때문입니다.
+     
       navigate('/')
-      // 여기 주석
-      // const user = userCredential.user
-      // dispatch(
-      //   userLogIn({
-      //     uid: user.uid,
-      //     email: user.email,
-      //     displayName: user.displayName,
-      //     photoURL: user.photoURL,
-      //   })
-      // )
-      //파이어 베이스에서 데이터 읽기
+     
       alert('로그인 성공')
       console.log('로그인 성공', currentUser)
-      // navigate('/home')
+     
     } catch (error) {
       alert('로그인 실패', error.message)
       console.error('로그인 실패', error.message)
@@ -62,51 +51,6 @@ const Login = () => {
   const handleToRegister = () => {
     navigate('/register')
   }
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const q = query(collection(db, 'users'))
-  //     const querySnapshot = await getDocs(q)
-
-  //     const initialUsers = []
-
-  //     querySnapshot.forEach((doc) => {
-  //       const data = {
-  //         id: doc.id,
-  //         ...doc.data(),
-  //       }
-  //       initialUsers.push(data)
-  //       console.log(doc.id)
-  //       console.log(doc.data())
-  //     })
-  //     dispatch(userLogIn(initialUsers))
-  //   }
-
-  //   fetchData()
-  // }, [])
-  // 여기 주석
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       // 로그인한 사용자 정보를 Redux 스토어에 저장
-  //       dispatch(
-  //         userLogIn({
-  //           uid: user.uid,
-  //           email: user.email,
-  //           displayName: user.displayName,
-  //           photoURL: user.photoURL,
-  //         })
-  //       )
-  //       navigate('/') // 로그인한 상태라면 홈 페이지로 이동
-  //       console.log(user)
-  //     }
-  //   })
-
-  //   // Clean-up 함수 등록
-  //   return () => {
-  //     unsubscribe()
-  //   }
-  // }, [dispatch, navigate])
 
   return (
     <St.LoginContainer>
@@ -129,19 +73,7 @@ const Login = () => {
             <St.LoginButton onClick={handleLogin}>로그인</St.LoginButton>
             <St.JoinButton onClick={handleToRegister}>회원가입</St.JoinButton>
           </St.ButtonBox>
-          <SocialLogin></SocialLogin>
-          {/* <St.SocialButtonDiv>
-            <button>
-              <figure>
-                <St.SocialImg src="/asset/img/login/google.svg" />
-              </figure>
-            </button>
-            <button>
-              <figure>
-                <St.SocialImg src="/asset/img/login/github.svg" />
-              </figure>
-            </button>
-          </St.SocialButtonDiv> */}
+          <SocialLogin/>
         </St.LoginForm>
       </St.LoginFormContainer>
     </St.LoginContainer>

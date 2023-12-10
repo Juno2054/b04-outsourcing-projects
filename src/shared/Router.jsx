@@ -14,11 +14,6 @@ import SampleNavigate from '../page/Sample/SampleNavigate'
 import SampleProfile from '../page/Sample/SampleProfile'
 import Survey from '../page/Survey'
 
-// Page는 일단 6개이다.
-// Layout, Home, Detail,Login, Survey, Profile
-
-// Survey는 modal이 아닌 페이지로 뺐습니다. 이유는 모달로서 부가정보를 수집하는 목적이 아닌
-// Survey를 통해서 메인에게 정보를 전달하고 그것을 주 UI의 재료로 사용하려고 page로 뺐습니다.
 
 function Router() {
   return (
