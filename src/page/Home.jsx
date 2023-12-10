@@ -56,14 +56,14 @@ const ToggleWrapper = styled.div`
 `
 
 const ToggleButton = styled.button`
-  background-color: #f14e4e;
   font-weight: bold;
-  height: 60px;
-  color: #fff;
+  height: 20px;
+  color: black;
   border: none;
   padding: 10px 5px;
   border-radius: 4px;
   cursor: pointer;
   outline: none;
-  font-size: 30px;
+  font-size: 20px;
+  margin-left:10px;
 `
