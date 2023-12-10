@@ -16,7 +16,6 @@ const user = createSlice({
   initialState,
   reducers: {
     userLogIn(state, { payload }) {
-      console.log('-009999999999999999999999999999')
       console.log(payload)
       state.uid = payload.uid
       state.email = payload.email
