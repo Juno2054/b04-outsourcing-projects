@@ -1,16 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
+import { uuidv4 } from '@firebase/util'
+import { updateProfile } from 'firebase/auth'
 import {
   deleteObject,
   getDownloadURL,
   ref,
   uploadBytesResumable,
 } from 'firebase/storage'
-import { updateProfile } from 'firebase/auth'
-import { uuidv4 } from '@firebase/util'
-import { auth, storage, db } from '../../API/firebase/firebase.API'
-import { updateDoc, doc } from 'firebase/firestore'
+import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
+import { auth, storage } from '../../API/firebase/firebase.API'
 import { sampleUserUpdateProfile } from '../../redux/modules/sample/sampleUserSlice'
 function SampleProfile() {
   const [modal, setModal] = useState(false)
@@ -61,6 +60,7 @@ const SampleModal = ({ setModal }) => {
   const [uploadImage, setUploadImage] = useState()
   const [progress, setProgress] = useState()
   const dispatch = useDispatch()
+  // 나중에 Storage에 저장된 이전 사진을 삭제 할 때 사용 하려고 만든 것입니다.
   const profilePhotoURLKey = uuidv4()
   // div를 누르면 input file이 클릭됩니다.
   const handleImageClick = () => {
@@ -99,14 +99,12 @@ const SampleModal = ({ setModal }) => {
   const uploadProfileImageonStorage = async () => {
     if (!uploadImage) return
     try {
-      // 나중에 삭제 할 때 사용 하려고 입니다.
-
       // 그냥 메타데이터 입니다.
       const getPhotoURL = await new Promise((resolve, reject) => {
         const metaData = {
           contentType: uploadImage.type,
         }
-        //Storage에 할 경로를 잡아주는 것입니다.
+        //Storage에 저장할 참조입니다.
         const storageRef = ref(
           storage,
           `profileImage/${sampleUser.email}/${profilePhotoURLKey}`
@@ -116,9 +114,11 @@ const SampleModal = ({ setModal }) => {
           uploadImage,
           metaData
         )
+        //Storage에 사진 업로드 firebase의 메소드 입니다.
         UploadTask.on(
           'state_changed',
           (snapshot) => {
+            // 진행률을 표시 할 수 있습니다.
             const progress =
               (snapshot.bytesTransferred / snapshot.totalBytes) * 100
             setProgress(progress)
@@ -150,34 +150,13 @@ const SampleModal = ({ setModal }) => {
     }
   }
 
+  // 여러기능 함수들을 모아 놓은 함수 입니다.
   // 이미지 삭제, 이미지 업로드 후 다운받기, profile 수정하기를 통합하고, dispatch로 user Redux에 dispatch 해줍니다.
-
   const allInOneWithFirebaseAndUserRedux = async () => {
     try {
       await deletePreProfileImageOnStorage()
       const downLoadUrl = await uploadProfileImageonStorage()
       await updateProfileOnFireBase(downLoadUrl)
-      console.log(inputRef.current.intro.value)
-      console.log(profilePhotoURLKey)
-      // 길훈님 여기서 하는 겁니다.
-
-      /*
-      upDateDoc( uid )
-      downLoadUrl -  profile사진 url 입니다.
-      profilePhotoURLKey
-      inputRef.current.intro.value
-      firebase에 올리고 
-      그것을 다시 받아서 dispatch해주시면 좋겠습니다. 
-      
-      */
-      console.log(sampleUser.uid)
-      const userRef = doc(db, 'users', sampleUser.id)
-      await updateDoc(userRef, {
-        photoURL: downLoadUrl,
-        profilePhotoURLKey,
-        intro: inputRef.current.intro.value,
-      })
-
       dispatch(
         sampleUserUpdateProfile({
           photoURL: downLoadUrl,

@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import * as St from '../styled-component/login/loginStyle'
-import { useNavigate } from 'react-router'
-import { userLogIn } from '../redux/modules/login/loginSlice'
-import { auth } from '../API/firebase/firebase.API'
-import { signInWithEmailAndPassword, onAuthStateChanged } from '@firebase/auth'
-import { useDispatch, useSelector } from 'react-redux'
-import SocialLogin from './SocialLogin'
+import { signInWithEmailAndPassword } from '@firebase/auth'
 import { collection, getDocs, query } from 'firebase/firestore'
-import { db } from '../API/firebase/firebase.API'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router'
+import { auth, db } from '../API/firebase/firebase.API'
+import { userLogIn } from '../redux/modules/login/loginSlice'
+import * as St from '../styled-component/login/loginStyle'
+import SocialLogin from './SocialLogin'
 
 const Login = () => {
   const navigate = useNavigate()

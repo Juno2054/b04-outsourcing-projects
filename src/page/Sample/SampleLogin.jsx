@@ -1,15 +1,16 @@
+import {
+  createUserWithEmailAndPassword,
+  GithubAuthProvider,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+} from '@firebase/auth'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-  GoogleAuthProvider,
-  signInWithPopup,
-  GithubAuthProvider,
-} from '@firebase/auth'
+
 import { auth } from '../../API/firebase/firebase.API'
 import {
   sampleUserCurrentState,
@@ -142,7 +143,6 @@ const SignIn = () => {
       console.log(error)
     }
   }
-  const onClickSignIN = async (userInfo) => {}
 
   const onClickSignIn = async (userInfo) => {
     if (sampleUser.currentUser) return alert('이미 로그인 되어있어요')

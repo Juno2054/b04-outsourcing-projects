@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import * as St from '../styled-component/login/loginStyle'
-import { useNavigate } from 'react-router-dom'
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
 } from '@firebase/auth'
+import { addDoc, collection } from 'firebase/firestore'
+import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { auth, db } from '../API/firebase/firebase.API'
 import { userLogIn } from '../redux/modules/login/loginSlice'
-import { useDispatch } from 'react-redux'
-import { addDoc, collection } from 'firebase/firestore'
+import * as St from '../styled-component/login/loginStyle'
 
 const Register = () => {
   const navigate = useNavigate()
@@ -93,12 +93,14 @@ const Register = () => {
           />
           <St.InputBox
             type="text"
+            maxLength={10}
             placeholder="닉네임"
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
           />
           <St.InputBox
             type="text"
+            maxLength={20}
             placeholder="자기소개"
             value={profileIntro}
             onChange={(e) => setProfileIntro(e.target.value)}

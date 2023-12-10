@@ -40,6 +40,7 @@ const user = createSlice({
       state.photoURL = payload.photoURL
       state.profilePhotoURLKey = payload.profilePhotoURLKey
       state.profileIntro = payload.profileIntro
+      state.displayName = payload.displayName
     },
   },
 })

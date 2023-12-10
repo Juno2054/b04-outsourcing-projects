@@ -4,8 +4,6 @@ export const FooterContainer = styled.footer`
   background-color: #ea3267;
   padding: 20px;
   color: white;
-  position: fixed;
-  bottom: 0;
   width: 100%;
   font-size: ${({ theme }) => theme.fontSize.sm};
 `
