@@ -1,5 +1,18 @@
-import React from 'react'
+import { updateProfile } from '@firebase/auth'
+import { doc, updateDoc } from '@firebase/firestore'
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytesResumable,
+} from '@firebase/storage'
+import { uuidv4 } from '@firebase/util'
+import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
+import { auth, db, storage } from '../API/firebase/firebase.API'
 import ProfileComponent from '../component/profile/ProfileComponent'
+import { userUpdateProfile } from '../redux/modules/login/loginSlice'
 
 function Profile() {
   return (
@@ -74,8 +87,7 @@ const Modal = ({ setModal }) => {
     if (!user.profilePhotoURLKey) return
     try {
       const desertRef = ref(
-        storage,
-        `profileImage/${user.email}/${user.profilePhotoURLKey}`
+        storage`profileImage/${user.email}/${user.profilePhotoURLKey}`
       )
       await deleteObject(desertRef)
       console.log('삭제완료')

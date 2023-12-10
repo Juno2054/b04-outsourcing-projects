@@ -176,6 +176,7 @@ export const ContentCommentList = styled.div`
   justify-content: left;
   border-bottom: 1px solid black;
   padding: 20px 0px 20px 0px;
+  flex: 0 0 20%;
   img {
     width: 100%;
     max-width: 120px;
@@ -193,6 +194,30 @@ export const ContentCommentList = styled.div`
     padding: 5px;
     font-size: 16px;
     transition: 1ms all;
+    &:hover {
+      background-color: #9f113a;
+    }
+    &:active {
+      background-color: #330411;
+    }
+  }
+`
+export const ConPost = styled.div`
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-end;
+  button {
+    background-color: #ea3267;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    margin: 0px 10px 10px;
+    padding: 5px;
+    font-size: 16px;
+    transition: 1ms all;
+
     &:hover {
       background-color: #9f113a;
     }

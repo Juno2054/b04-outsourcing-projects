@@ -34,7 +34,11 @@ function DetailComponent({ post }) {
   const clickedLocation = addressData.clickedLocation
   const addressDataSelcted = addressData
   console.log('머고', addressDataSelcted)
+
+  // const date = addressDataSelcted.createdAt.toDate()
+  // console.log('머고3', date.toLocaleString)
   console.log('클릭한 위치', clickedLocation)
+
   const [selectedCommentId, setSelectedCommentId] = useState(null)
   //취소할때 리뷰 임시저장
   const [originalContent, setOriginalContent] = useState('')
@@ -46,7 +50,7 @@ function DetailComponent({ post }) {
   }
   const placeUrl = addressDataSelcted.imageUrl
   console.log('111111111111111placeUrl', placeUrl)
-
+  const [ConPostEdit, setConPostEdit] = useState(false)
   // 날짜 함수
   function formatDate(dateString) {
     const date = new Date(dateString)
@@ -390,7 +394,43 @@ function DetailComponent({ post }) {
         </form>
         <St.ContentDiv>
           <St.ContentList>
-            <St.ContentImgBox>
+            <St.ConPost>
+              {console.log('아이디 비교', user.uid, addressDataSelcted.userId)}
+              {user.uid === addressDataSelcted.userId ? (
+                <>
+                  {/* 수정버튼 */}
+                  <button
+                    onClick={() => {
+                      setConPostEdit(false)
+                    }}
+                  >
+                    수정완료
+                  </button>
+                  {/* 수정 상태에서 취소 누르면 되돌아감 */}
+                  <button
+                    onClick={() => {
+                      setConPostEdit(false)
+                    }}
+                  >
+                    취소
+                  </button>
+                  <button onClick={() => {}}>삭제</button>
+                </>
+              ) : (
+                <button
+                  onClick={() => {
+                    setConPostEdit(true)
+                  }}
+                >
+                  수정
+                </button>
+              )}
+            </St.ConPost>
+            별점 {'⭐'.repeat(addressData?.rating - 1)}
+            {addressDataSelcted?.content ||
+              clickedLocation?.content ||
+              '리뷰없음'}
+            {/* <St.ContentImgBox>
               <St.ContentImg
                 src={process.env.PUBLIC_URL + '/asset/img/detaill/1.jpg'}
                 alt=""
@@ -415,7 +455,7 @@ function DetailComponent({ post }) {
                 src={process.env.PUBLIC_URL + '/asset/img/detaill/4.jpg'}
                 alt=""
               />
-            </St.ContentImgBox>
+            </St.ContentImgBox> */}
           </St.ContentList>
           <St.ContentList>
             {/* 리뷰 갯수  */}
@@ -424,9 +464,7 @@ function DetailComponent({ post }) {
               <span style={{ color: 'blue' }}>{filteredComments.length}</span>
             </p>
           </St.ContentList>
-          <St.ContentList>
-            별점 {'⭐'.repeat(addressData?.rating - 1)}
-          </St.ContentList>
+          <St.ContentList></St.ContentList>
         </St.ContentDiv>
         <St.ContentListReviewComment>
           {/* 댓글 */}

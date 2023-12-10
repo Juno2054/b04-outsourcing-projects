@@ -1,7 +1,11 @@
+import { onAuthStateChanged } from '@firebase/auth'
 import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { Outlet } from 'react-router'
+import { auth } from '../API/firebase/firebase.API'
 import Footer from '../component/layout/Footer'
 import Header from '../component/layout/Header'
+import { userLogIn } from '../redux/modules/login/loginSlice'
 function Layout() {
   const dispatch = useDispatch()
   useEffect(() => {

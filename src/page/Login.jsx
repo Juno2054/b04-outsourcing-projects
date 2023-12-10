@@ -1,6 +1,6 @@
 import { onAuthStateChanged, signInWithEmailAndPassword } from '@firebase/auth'
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import { auth } from '../API/firebase/firebase.API'
 import { userLogIn } from '../redux/modules/login/loginSlice'
