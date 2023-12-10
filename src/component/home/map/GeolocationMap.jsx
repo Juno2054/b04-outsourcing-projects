@@ -73,7 +73,7 @@ const GeolocationMap = () => {
             )
           }}
         >
-          지도 중심좌표 이동시키기
+          현재위치로 이동하기
         </StyledButton>
       </p>
       <Map
