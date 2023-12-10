@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Map, MapMarker, useMap } from 'react-kakao-maps-sdk'
+import { Map, MapMarker } from 'react-kakao-maps-sdk'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { selectPosts } from '../../../redux/modules/home/postsSlice'
@@ -12,9 +12,12 @@ const GeolocationMap = () => {
     },
     errMsg: null,
     isLoading: true,
-    isPanto: false, 
-  });
+    isPanto: false,
+  })
 
+  const [map, setMap] = useState(null)
+  console.log(state.center)
+  console.log(map)
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -46,8 +49,6 @@ const GeolocationMap = () => {
   }, [])
 
   const posts = useSelector(selectPosts)
-  const navigate = useNavigate()
-
   const selectedButtonData = useSelector((state) => {
     const selectedButtonId = state.mapPlace.selectedButton
     const mapPlaces = state.mapPlace.mapPlaces
@@ -61,92 +62,91 @@ const GeolocationMap = () => {
       )
     : []
 
-    const EventMarkerContainer = ({ position, content, onClick }) => {
-      const map = useMap();
-      const [isVisible, setIsVisible] = useState(false);
-    
-      const handleMarkerClick = () => {
-        const confirmed = window.confirm('이 장소에 대한 게시글을 보시겠어요?');
-        if (confirmed) {
-          navigate(`/detail/${onClick.id}`, { state: onClick });
-        }
-      };
-    
-      return (
-        <MapMarker
-          position={position}
-          image={{
-            src: 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png',
-            size: new window.kakao.maps.Size(24, 35),
-            alt: 'custom marker',
-          }}
-          onClick={handleMarkerClick}
-          onMouseOver={() => setIsVisible(true)}
-          onMouseOut={() => setIsVisible(false)}
-        >
-          {isVisible && (
-            <div
-              style={{
-                padding: '5px',
-                color: '#000',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                maxWidth: '200px',
-              }}
-            >
-              {content}
-            </div>
-          )}
-        </MapMarker>
-          
-      );
-    };
-    
   return (
     <>
-    <Map
-      center={state.center}
-      style={{
-        width: 'auto',
-        height: '88%',
-        border: '2px solid #ea3267',
-        borderRadius: '10px',
-        margin: '10px',
-      }}
-      level={3}
-      isPanto={state.isPanto} 
-    >
-      {!state.isLoading && (
-        <MapMarker position={state.center}>
-          <div style={{ padding: '5px', color: '#000' }}>
-            {state.errMsg ? state.errMsg : '여기에 계신가요?!'}
-          </div>
-        </MapMarker>
-      )}
-      {filteredPosts.map((post) => (
-        <EventMarkerContainer
-          key={`EventMarkerContainer-${post.lat}-${post.lng}`}
-          position={{ lat: post.lat, lng: post.lng }}
-          content={post.title}
-          onClick={post}
-        />
-      ))}
-   </Map>
+      <Map
+        center={state.center}
+        style={{
+          width: 'auto',
+          height: '88%',
+          border: '2px solid #ea3267',
+          borderRadius: '10px',
+          margin: '10px',
+        }}
+        level={3}
+        isPanto={state.isPanto}
+        onCreate={setMap}
+      >
+        {!state.isLoading && (
+          <MapMarker position={state.center}>
+            <div style={{ padding: '5px', color: '#000' }}>
+              {state.errMsg ? state.errMsg : '여기에 계신가요?!'}
+            </div>
+          </MapMarker>
+        )}
+        {filteredPosts.map((post) => (
+          <EventMarkerContainer
+            key={`EventMarkerContainer-${post.lat}-${post.lng}`}
+            position={{ lat: post.lat, lng: post.lng }}
+            content={post.title}
+            onClick={post}
+          />
+        ))}
+      </Map>
       <p>
         <button
-          onClick={() =>
-            setState({
-              center: { lat: 33.452613, lng: 126.570888 },
-              isPanto: false,
-            })
-          }
+          onClick={(e) => {
+            map.setCenter(
+              new window.kakao.maps.LatLng(state.center.lat, state.center.lng)
+            )
+          }}
         >
           지도 중심좌표 이동시키기
         </button>
       </p>
     </>
-  );
-};
+  )
+}
 
 export default GeolocationMap
+
+// Maker보이게 하기
+const EventMarkerContainer = ({ position, content, onClick }) => {
+  const [isVisible, setIsVisible] = useState(false)
+  const navigate = useNavigate()
+  const handleMarkerClick = () => {
+    const confirmed = window.confirm('이 장소에 대한 게시글을 보시겠어요?')
+    if (confirmed) {
+      navigate(`/detail/${onClick.id}`, { state: onClick })
+    }
+  }
+
+  return (
+    <MapMarker
+      position={position}
+      image={{
+        src: 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png',
+        size: new window.kakao.maps.Size(24, 35),
+        alt: 'custom marker',
+      }}
+      onClick={handleMarkerClick}
+      onMouseOver={() => setIsVisible(true)}
+      onMouseOut={() => setIsVisible(false)}
+    >
+      {isVisible && (
+        <div
+          style={{
+            padding: '5px',
+            color: '#000',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            maxWidth: '200px',
+          }}
+        >
+          {content}
+        </div>
+      )}
+    </MapMarker>
+  )
+}
