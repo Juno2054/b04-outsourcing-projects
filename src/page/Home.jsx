@@ -32,7 +32,6 @@ const Home = () => {
         </ToggleWrapper>
         <Map />
       </Container>
-      
     </HomeSection>
   )
 }

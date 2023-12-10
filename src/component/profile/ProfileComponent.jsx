@@ -1,5 +1,6 @@
 import { uuidv4 } from '@firebase/util'
 import { updateProfile } from 'firebase/auth'
+import { doc, updateDoc } from 'firebase/firestore'
 import {
   deleteObject,
   getDownloadURL,
@@ -8,15 +9,11 @@ import {
 } from 'firebase/storage'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { auth, storage } from '../../API/firebase/firebase.API'
+import { auth, db, storage } from '../../API/firebase/firebase.API'
 import { userUpdateProfile } from '../../redux/modules/login/loginSlice'
 import * as St from '../../styled-component/profile/Stprofile'
-// 로컬스토리지에 저장된 정보 가져오기 - 로그인 할때 저장해줬음
 
-const UrlPhoto = JSON.parse(localStorage.getItem('photoURL'))
-const UrlEmail = localStorage.getItem('email')
-const UrlDisplayName = localStorage.getItem('displayName')
-const UrlIntro = localStorage.getItem('intro')
+
 
 function SampleProfile() {
   const [modal, setModal] = useState(false)
@@ -33,17 +30,16 @@ function SampleProfile() {
 export default SampleProfile
 
 const SampleUserProfile = ({ setModal }) => {
-  const loginSlice = useSelector((state) => state.loginSlice)
+  const user = useSelector((state) => state.loginSlice)
+
+ 
 
   return (
     <St.UserInfo>
       <St.ProfileImageWrap>
-        {/* 이미지 리덕스저장소에 없으면 로컬스토리지 이미지 보여줌  */}
-        {loginSlice.photoURL ? (
-          <St.ProfileImage src={loginSlice.photoURL} />
-        ) : (
-          <St.ProfileImage src={UrlPhoto} />
-        )}
+       
+
+        <St.ProfileImage src={user.photoURL} />
         <St.Edit
           src={process.env.PUBLIC_URL + '/asset/img/profile/edit.png'}
           alt="Edit Icon"
@@ -51,13 +47,10 @@ const SampleUserProfile = ({ setModal }) => {
         ></St.Edit>
       </St.ProfileImageWrap>
       <St.UserWrap>
-        {/* //로컬스토리지에 저장된 정보 가져옴 - 로그인 할때 저장해줬음 */}
-        <p>{UrlDisplayName}</p>
-        <p>{UrlEmail}</p>
-        <p>{UrlIntro}</p>
-        {/* <p>{loginSlice.displayName || '닉네임'}</p>
-        <p>{loginSlice.email || '이메일'}</p>
-        <p>{loginSlice.intro || '자기소개'}</p> */}
+       
+        <p>{user.displayName || '닉네임'}</p>
+        <p>{user.email || '이메일'}</p>
+        <p>{user.intro || '자기소개'}</p>
       </St.UserWrap>
     </St.UserInfo>
   )
@@ -65,40 +58,40 @@ const SampleUserProfile = ({ setModal }) => {
 
 const SampleModal = ({ setModal }) => {
   const inputRef = useRef({})
-  const loginSlice = useSelector((state) => state.loginSlice)
+  const user = useSelector((state) => state.loginSlice)
   const defaultImg =
-    loginSlice.photoURL ||
+    user.photoURL ||
     process.env.PUBLIC_URL + '/asset/img/login/profileDefaultImg.jpg'
   const [previewImg, setPreviewImg] = useState()
   const imgRef = useRef()
   const [uploadImage, setUploadImage] = useState()
   const [progress, setProgress] = useState()
   const dispatch = useDispatch()
-  // div를 누르면 input file이 클릭됩니다.
+  
   const handleImageClick = () => {
     imgRef.current.click()
   }
-  // 이미지 미리보기 입니다.
+  
   const handleImageChange = (e) => {
     const file = e.target.files[0]
     const preview = URL.createObjectURL(file)
     setPreviewImg(preview)
     setUploadImage(file)
   }
-  // 이미지 미리보기 취소입니다.
+  
   const handleRemovePreviewImage = () => {
     setPreviewImg(defaultImg)
     setUploadImage(null)
   }
 
-  // firebase 기존이미지 삭제 하기
+  
   const deletePreProfileImageOnStorage = async () => {
-    // user에게 photoURLKey가 없다면 함수 종료 하자 - 처음 프로필 등록하는 거니까
-    if (!loginSlice.profilePhotoURLKey) return
+    
+    if (!user.profilePhotoURLKey) return
     try {
       const desertRef = ref(
         storage,
-        `profileImage/${loginSlice.email}/${loginSlice.profilePhotoURLKey}`
+        `profileImage/${user.email}/${user.profilePhotoURLKey}`
       )
       await deleteObject(desertRef)
       console.log('삭제완료')
@@ -106,9 +99,10 @@ const SampleModal = ({ setModal }) => {
       throw new Error('이전 이미지 삭제하다가 나버린', error)
     }
   }
+  console.log(user)
 
-  // 프로필 사진 Storage에 올리기
-  // 나머지 코드와 함께 수정된 부분
+  
+  
   const uploadProfileImageonStorage = async () => {
     try {
       const profilePhotoURLKey = uuidv4()
@@ -117,11 +111,11 @@ const SampleModal = ({ setModal }) => {
       }
       const storageRef = ref(
         storage,
-        `profileImage/${loginSlice.email}/${profilePhotoURLKey}`
+        `profileImage/${user.email}/${profilePhotoURLKey}`
       )
       const UploadTask = uploadBytesResumable(storageRef, uploadImage, metaData)
 
-      // Promise를 사용하여 업로드 완료를 기다림
+      
       return new Promise((resolve, reject) => {
         UploadTask.on(
           'state_changed',
@@ -148,7 +142,7 @@ const SampleModal = ({ setModal }) => {
     }
   }
 
-  // profile 수정 함수입니다.
+  
   const updateProfileOnFireBase = async (photoURL) => {
     try {
       await updateProfile(auth.currentUser, {
@@ -166,14 +160,24 @@ const SampleModal = ({ setModal }) => {
     }
   }
 
-  // 이미지 삭제, 이미지 업로드 후 다운받기, profile 수정하기를 통합하고,
-  //dispatch로 user Redux에 dispatch 해줍니다.
+ 
+
   const allInOneWithFirebaseAndUserRedux = async () => {
     try {
       await deletePreProfileImageOnStorage()
       const { downLoadUrl, profilePhotoURLKey } =
         await uploadProfileImageonStorage()
       await updateProfileOnFireBase(downLoadUrl)
+
+      const userDocRef = doc(db, 'users', user.uid)
+
+      await updateDoc(userDocRef, {
+        photoURL: downLoadUrl,
+        profilePhotoURLKey,
+        intro: inputRef.current.intro.value,
+        displayName: inputRef.current.displayName.value,
+      })
+
       dispatch(
         userUpdateProfile({
           photoURL: downLoadUrl,
@@ -182,15 +186,15 @@ const SampleModal = ({ setModal }) => {
         })
       )
 
-      // 컨텐츠 업데이트 후 모달 닫기
+      
       setModal(false)
     } catch (error) {
       console.log(error)
-      // 여기서 에러 처리를 해줘야해요
+   
     }
   }
 
-  // modal창 띄우면 자동 포커스 입니다.
+ 
   useEffect(() => {
     inputRef.current.displayName.focus()
   }, [])
@@ -198,7 +202,7 @@ const SampleModal = ({ setModal }) => {
   return (
     <St.Modal>
       <div>
-        {/* 이미지 */}
+      
         <div>
           <St.ProfileWrap>
             <St.ProfileImage src={previewImg || defaultImg} alt="" />
@@ -216,8 +220,8 @@ const SampleModal = ({ setModal }) => {
             style={{ display: 'none' }}
           />
         </div>
-        {/* 이미지 ENd */}
-        <p>이메일 : {loginSlice.email}</p>
+      
+        <p>이메일 : {user.email}</p>
         <p>
           닉네임 :{' '}
           <St.ModalInput

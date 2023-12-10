@@ -1,8 +1,9 @@
-import { onAuthStateChanged, signInWithEmailAndPassword } from '@firebase/auth'
-import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { signInWithEmailAndPassword } from '@firebase/auth'
+import { collection, getDocs, query } from 'firebase/firestore'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
-import { auth } from '../API/firebase/firebase.API'
+import { auth, db } from '../API/firebase/firebase.API'
 import { userLogIn } from '../redux/modules/login/loginSlice'
 import * as St from '../styled-component/login/loginStyle'
 import SocialLogin from './SocialLogin'
@@ -12,7 +13,8 @@ const Login = () => {
   const dispatch = useDispatch()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-
+  const currentUser = useSelector((state) => state.loginSlice.currentUser)
+  console.log(currentUser)
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
@@ -21,28 +23,27 @@ const Login = () => {
         email,
         password
       )
-      console.log('로그용', userCredential)
-      const user = userCredential.user
-      dispatch(
-        userLogIn({
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-        })
-      )
+      const q = query(collection(db, 'users'), userCredential.user.uid)
+      const querySnapshot = await getDocs(q)
 
-      // 로그인 할떄 로컬스토리지에 저장 해줌
-      localStorage.setItem('user', JSON.stringify(user.uid))
-      localStorage.setItem('email', JSON.stringify(user.email))
-      localStorage.setItem('displayName', JSON.stringify(user.displayName))
-      localStorage.setItem('photoURL', JSON.stringify(user.photoURL))
+      let data
+      querySnapshot.forEach((doc) => {
+        data = {
+          id: doc.id,
+          ...doc.data(),
+        }
+      })
 
+      dispatch(userLogIn(data))
+
+     
+      navigate('/')
+     
       alert('로그인 성공')
-      console.log('로그인 성공', user)
-      navigate('/') // 수정 해야함
+      console.log('로그인 성공', currentUser)
+     
     } catch (error) {
-      alert('로그인 실패')
+      alert('로그인 실패', error.message)
       console.error('로그인 실패', error.message)
     }
   }
@@ -50,30 +51,6 @@ const Login = () => {
   const handleToRegister = () => {
     navigate('/register')
   }
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // 로그인한 사용자 정보를 Redux 스토어에 저장
-        dispatch(
-          userLogIn({
-            uid: user.uid,
-            email: user.email,
-            displayName: user.displayName,
-            photoURL: user.photoURL,
-          })
-        )
-        console.log('확인')
-        // navigate('/') // 로그인한 상태라면 홈 페이지로 이동
-        console.log(user)
-      }
-    })
-    // 클린업 함수 주석처리 해놧습니다 확인해주세요
-    // Clean-up 함수 등록
-    // return () => {
-    //   unsubscribe()
-    // }
-  }, [dispatch, navigate])
 
   return (
     <St.LoginContainer>
@@ -96,19 +73,7 @@ const Login = () => {
             <St.LoginButton onClick={handleLogin}>로그인</St.LoginButton>
             <St.JoinButton onClick={handleToRegister}>회원가입</St.JoinButton>
           </St.ButtonBox>
-          <SocialLogin></SocialLogin>
-          {/* <St.SocialButtonDiv>
-            <button>
-              <figure>
-                <St.SocialImg src="/asset/img/login/google.svg" />
-              </figure>
-            </button>
-            <button>
-              <figure>
-                <St.SocialImg src="/asset/img/login/github.svg" />
-              </figure>
-            </button>
-          </St.SocialButtonDiv> */}
+          <SocialLogin/>
         </St.LoginForm>
       </St.LoginFormContainer>
     </St.LoginContainer>
