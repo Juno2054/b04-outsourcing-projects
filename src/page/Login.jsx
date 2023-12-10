@@ -40,7 +40,7 @@ const Login = () => {
 
       alert('로그인 성공')
       console.log('로그인 성공', user)
-      navigate('/home')
+      navigate('/') // 수정 해야함
     } catch (error) {
       alert('로그인 실패')
       console.error('로그인 실패', error.message)
