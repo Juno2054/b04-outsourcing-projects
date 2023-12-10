@@ -64,18 +64,18 @@ const GeolocationMap = () => {
     : []
 
   return (
-         <>
-            <p>
+    <>
+      <p>
         <StyledButton
-        onClick={(e) => {
-          map.setCenter(
-           new window.kakao.maps.LatLng(state.center.lat, state.center.lng)
-          );
-       }}
-     >
-        현재위치로 이동하기!!
-      </StyledButton>
-    </p>
+          onClick={(e) => {
+            map.setCenter(
+              new window.kakao.maps.LatLng(state.center.lat, state.center.lng)
+            )
+          }}
+        >
+          지도 중심좌표 이동시키기
+        </StyledButton>
+      </p>
       <Map
         center={state.center}
         style={{
@@ -105,10 +105,25 @@ const GeolocationMap = () => {
           />
         ))}
       </Map>
- 
+  
     </>
   )
 }
+
+const StyledButton = styled.button`
+  background-color: #ea3267;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #d80054;
+  }
+`;
 
 export default GeolocationMap
 
@@ -152,21 +167,3 @@ const EventMarkerContainer = ({ position, content, onClick }) => {
     </MapMarker>
   )
 }
-
-
-
-const StyledButton = styled.button`
-  background-color: #ea3267;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 16px;
-  margin-top: 10px;
-  mar
-
-  &:hover {
-    background-color: #ff5370;
-  }
-`;
