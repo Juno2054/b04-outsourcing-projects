@@ -58,7 +58,7 @@ function PostList({ selectedPlace }) {
               <PostContent>
                 <PostTitle>{post.title}</PostTitle>
                 <PostText>{post.content}</PostText>
-                <p>{formatDate(post.createdAt)}</p>
+                <Date>{formatDate(post.createdAt)}</Date>
               </PostContent>
             </Post>
           ))}
@@ -70,38 +70,30 @@ export default PostList
 
 const PostListSection = styled.section`
   flex-wrap: wrap;
-  justify-content: space-around;
   align-items: flex-start;
-  margin: 5px;
   flex-basis: 25%;
   overflow-y: scroll; 
-  height: 100%; 
-  max-height: 1100px;
   overflow-x: hidden;
 `;
 
 const PlaceHeader = styled.h2`
-  margin-bottom: 20px;
-  margin-top: 10px;
-  font-size: 24px;
-  color: #333;
-  text-transform: capitalize;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  font-size: 15px;
+  /* text-transform: capitalize; */
   text-align: center;
-  border-bottom: 2px solid #ea3267;
-  padding-bottom: 5px;
 `
 const Post = styled.article`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  border: 3px solid #ea3267;
   padding: 10px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease-in-out;
   margin-bottom: 20px;
-  margin-right: 10px;
-  height: 125px;
+  /* margin-right: 10px; */
+  height: 200px;
   width: 100%;
   cursor: pointer;
 
@@ -111,8 +103,8 @@ const Post = styled.article`
 `
 
 const PostImage = styled.img`
-  width: 100px;
-  height: 100px;
+  width:40%;
+  height:100%;
   object-fit: cover;
   border-radius: 10px;
   order: -1;
@@ -120,25 +112,27 @@ const PostImage = styled.img`
 
 const PostContent = styled.div`
   flex: 1;
-  margin-left: 20px;
+  margin-left: 10px;
   margin-top: 13px;
 `
 
 const PostTitle = styled.h2`
-  margin-bottom: 20px;
-  margin-top: 8px;
-  color: #333;
-  font-size: 20px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin-bottom: 10px;
+  font-size: 16px;
   white-space: nowrap;
   max-width: 200px;
 `
 
 const PostText = styled.p`
-  color: #666;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 250px;
+  line-height:1.2;
+  height:100px;
+  font-size:12px;
+  margin-bottom:5px;
+`
+
+const Date = styled.p`
+  font-size:12px;
+  font-weight:bold;
+
 `

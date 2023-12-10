@@ -32,9 +32,13 @@ const PostMainSection = styled.section`
   max-height: 1100px;
 `
 const Header = styled.h2`
-  font-size: 24px;
-  color: #333;
+  font-size: 30px;
   text-align: center;
   cursor: pointer;
   margin-top: 15px;
+
+  &:hover {
+    color: #ea3267;
+  }
+
 `

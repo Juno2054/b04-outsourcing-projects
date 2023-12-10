@@ -87,6 +87,8 @@ export const MediumDiv = styled.div`
 `
 export const MediumDiv2 = styled.div`
   margin-top: 15px;
+  align-items: center;
+  
 `
 export const BottomDiv = styled.div`
   text-align: center;
@@ -96,8 +98,11 @@ export const BottomDiv = styled.div`
   margin-top: 10px;
 `
 export const FlexDiv = styled.div`
+  flex-direction: row;
+  padding: 10px;
   display: flex;
   padding-top: 15px;
+  flex-direction: row;
   justify-content: center;
   flex-wrap: wrap;
 `
@@ -109,7 +114,7 @@ export const FlexDivMenu = styled.div`
   background-color: #ea3267;
   text-align: center;
   align-items: center;
-
+  
   flex-wrap: wrap;
 `
 export const FlexDivMenuImg = styled.img`
@@ -118,14 +123,21 @@ export const FlexDivMenuImg = styled.img`
 `
 export const H2 = styled.h2`
   font-size: 20px;
-  height: 23px;
   align-items: left;
+  width: 100%;
+  height: 50px;
+  padding-top: 15px;
+  padding-left: 15px;
+  border: 1px solid #f2f2f2;
+  font-size: 20px;
 `
 export const ContentDiv = styled.div`
-  font-size: 16px;
 
-  align-items: left;
-  text-align: left;
+  padding: 20px;
+  border: 1px solid #f2f2f2;
+  font-size: 20px;
+  margin-bottom: 20px;
+  line-height: 1.5;
 `
 export const ContentList = styled.div`
   border-bottom: 1px solid black;
@@ -134,8 +146,8 @@ export const ContentList = styled.div`
   position: relative;
   img {
     flex: 1;
-    object-fit: contain;
-    width: 50px;
+    width: 400px;
+    align-items: center;
   }
 `
 export const ContentListNewReview = styled.div`
@@ -165,6 +177,29 @@ export const ContentListProfile = styled.div`
 export const ContentListReview = styled.div`
   display: flex;
   justify-content: left;
+`
+export const img2 = styled.img`
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+
+  margin: 20px auto;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+`
+export const UserDiv = styled.div`
+  font-size: 20px;
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #f2f2f2;
+  font-size: 20px;
+  margin-bottom: 20px;
+  h3{
+    padding: 10px;
+  }
+  p{
+    padding: 10px;
+  }
 `
 export const ContentListReviewComment = styled.div`
   display: flex;
@@ -204,8 +239,8 @@ export const ContentCommentList = styled.div`
 `
 export const ConPost = styled.div`
   display: flex;
-  justify-content: left;
-  flex-direction: column;
+  justify-content: right;
+  flex-direction: row;
   flex-wrap: wrap;
   align-content: flex-end;
   button {
@@ -317,8 +352,8 @@ export const ReviewTextArea = styled.textarea`
   font-size: 20px;
 `
 export const Button = styled.button`
-  width: 100px;
-  height: 40px;
+  width: 80px;
+  height: 30px;
   margin-top: 10px;
   padding: 10px;
   border: 1px solid #f2f2f2;
@@ -326,7 +361,7 @@ export const Button = styled.button`
   text-align: center;
   background-color: #ea3267;
   border-radius: 10px;
-  font-size: 30px;
+  font-size: 20px;
   color: white;
 `
 export const P = styled.p`

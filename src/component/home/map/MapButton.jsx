@@ -40,7 +40,8 @@ function MapButton() {
   }
 
   return (
-    <MapSection>
+    <MapWrap>
+      <MapSection>
       {mapPlace.map((button) => (
         <ButtonWrapper key={button.id}>
           <Button
@@ -52,38 +53,54 @@ function MapButton() {
         </ButtonWrapper>
       ))}
     </MapSection>
+    </MapWrap>
+    
   )
 }
 
 export default MapButton
 
+const MapWrap= styled.div`
+`
+
 const MapSection = styled.section`
-  position: relative;
-  flex-basis: 75%;
+width:50%;
+position:absolute;
+z-index:10;
+  top:5%;
+  right:10%;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  /* padding-top: 10px; */
-  border:1px solid blue;
+  gap:5px;
+  flex-direction: row-reverse;
+  justify-content: space-around;
+  ${({ theme }) => theme.mediaQuery.md`
+  right:5%;
+    flex-direction: column;
+    align-items: flex-end;
+ `}
+  ${({ theme }) => theme.mediaQuery.sm`
+    flex-direction: column;
+ `}
+
 `
 
 const ButtonWrapper = styled.div`
-  /* margin-bottom: 10px; */
-  padding: 10px;
 `
 
 const Button = styled.button`
-  margin: 0;
-  /* padding: 10px 20px; */
+  font-size:13px;
   padding:10px;
-  background-color: ${(props) => (props.selected ? '#f20b4c' : '#e04b76')};
-  color: white;
+  background-color: ${(props) => (props.selected ? 'black' : 'white')};
+  border: ${(props) => (props.selected ? '1px solid black' : 'none')}; /* border 속성명 수정 */
+  color: #ea3267;
+  font-weight:bold;
   border: none;
-  border-radius: 10px;
+  border-radius: 15px;
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
+  margin-left:px;
 
   &:hover {
-    background-color: #f20b4c;
+    background-color: black;
   }
 `

@@ -16,11 +16,14 @@ function CarouselCard({ post }) {
   return (
     <CardContainer>
       <div key={post.id} onClick={goToDetail}>
+        <Imagewrap>
         <Image src={imageUrl} alt="Post" />
         <TextOverlay>
-          <Title>{post.title}</Title>
+           <Title>{post.title}</Title>
+          </TextOverlay>
+        </Imagewrap>
+        
           <Content>{post.content}</Content>
-        </TextOverlay>
       </div>
     </CardContainer>
   )
@@ -29,55 +32,45 @@ function CarouselCard({ post }) {
 export default CarouselCard
 
 const CardContainer = styled.div`
-  position: relative;
-  padding: 8px;
+  width:100%;
+  
 `
 
-const Image = styled.img`
-  width: 100%;
-  height: auto;
-  transition: opacity 0.3s ease-in-out;
-  border-radius: 10px;
-  border: 3px solid #ea3267;
-  min-width: 200px;
-  min-height: 200px;
+const Imagewrap = styled.div`
+position:relative;
+width:90%;
+margin:0 auto;
+margin-top:10px;`
 
-  ${CardContainer}:hover & {
-    opacity: 0.7;
-  }
+const Image = styled.img`
+  /* transition: opacity 0.3s ease-in-out; */
+  border-radius: 10px;
+  height:300px;
 `
 
 const TextOverlay = styled.div`
-  position: absolute;
+  position: absolute; 
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding: 10px;
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-
-  ${CardContainer}:hover & {
-    opacity: 1;
-  }
+  /* transition: opacity 0.3s ease-in-out; */
 `
 
 const Title = styled.h2`
-  color: #000;
-  font-size: 24px;
-  text-align: center;
-  margin-bottom: 10px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 200px;
+  font-size: 16px;
+  color: white;
+  padding:5px;
+  text-shadow: 0px 0px 10px grey;
 `
 
 const Content = styled.p`
-  color: #000;
-  font-size: 16px;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 250px;
+font-size: 14px;
+line-height:1.2;
+height:100px;
+overflow: hidden;
+text-overflow:ellipsis;
+width:90%;
+margin:0 auto;
+margin-top:10px;
+margin-bottom:10px;
 `
