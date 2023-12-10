@@ -6,11 +6,22 @@ import styled from 'styled-components'
 import { db } from '../../../API/firebase/firebase.API'
 import { selectPosts, setPosts } from '../../../redux/modules/home/postsSlice'
 
+function formatDate(timestamp) {
+  if (!timestamp) {
+    return 'Not Found'
+  }
+
+  const date = timestamp.toDate()
+  const options = { year: 'numeric', month: 'short', day: 'numeric' }
+  return date.toLocaleDateString('ko-KR', options)
+}
+
 function PostList({ selectedPlace }) {
+  
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const posts = useSelector(selectPosts)
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -47,6 +58,7 @@ function PostList({ selectedPlace }) {
               <PostContent>
                 <PostTitle>{post.title}</PostTitle>
                 <PostText>{post.content}</PostText>
+                <p>{formatDate(post.createdAt)}</p>
               </PostContent>
             </Post>
           ))}

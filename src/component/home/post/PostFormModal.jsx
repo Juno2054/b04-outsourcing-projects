@@ -1,4 +1,4 @@
-import { addDoc, collection } from 'firebase/firestore'
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -68,27 +68,33 @@ function PostFormModal({ closeModal }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+
+    const confirmSubmission = window.confirm('정말 이대로 게시하시겠습니까?');
+
+    if (!confirmSubmission) {
+      return; 
+    }
+  
 
     if (!title.trim() || !content.trim() || !selectedMapPlace.trim() || rating === 0 || !clickedLocation) {
       alert('제목, 내용, 게시물 항목, 별점, 위치를 전부 입력해주세요.');
       return;
     }
-
+  
     try {
-      const selectedPlace = mapPlaces.find(
-        (place) => place.mapName === selectedMapPlace
-      );
+      const selectedPlace = mapPlaces.find((place) => place.mapName === selectedMapPlace);
       const category_group_code = selectedPlace?.category_group_code || '';
-
+  
       let imageUrl = '';
       if (selectedFile) {
         const storageRef = ref(storage, 'postImg/' + selectedFile.name);
         await uploadBytes(storageRef, selectedFile);
         imageUrl = await getDownloadURL(storageRef);
       }
-
+  
       const postId = uuidv4();
-
+  
       await addDoc(collection(db, 'posts'), {
         id: postId,
         title: title,
@@ -100,17 +106,19 @@ function PostFormModal({ closeModal }) {
         category_group_code,
         clickedLocation,
         imageUrl: imageUrl,
+        createdAt: serverTimestamp(),
       });
-
+  
       setTitle('');
       setContent('');
       setRating(0);
       setSelectedMapPlace('');
       setSelectedFile('');
       setImageUrl('');
-
-      closeModal();
+  
+ 
       window.location.reload();
+  
     } catch (error) {
       console.error('문서 추가 중 발생한 오류 입니다.', error);
     }
@@ -127,7 +135,7 @@ function PostFormModal({ closeModal }) {
           value={title}
           onChange={handleTitleChange}
           placeholder="제목을 입력해주세요(20자 제한)"
-          maxLength={20}
+              maxLength={20}
         />
         <Label htmlFor="content">내용</Label>
         <TextArea
@@ -135,7 +143,7 @@ function PostFormModal({ closeModal }) {
           value={content}
           onChange={handleContentChange}
           placeholder="내용을 입력해주세요(200자 제한)"
-          maxLength={200}
+              maxLength={200}
         />
         <Label htmlFor="rating">별점</Label>
         <Select id="rating" value={rating} onChange={handleRatingChange}>
