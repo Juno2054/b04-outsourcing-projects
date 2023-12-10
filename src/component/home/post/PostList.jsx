@@ -52,8 +52,8 @@ function PostList({ selectedPlace }) {
               key={post.id}
               onClick={() => navigate(`/detail/${post.id}`, { state: post })}
             >
-              {post.postImg ? (
-                <PostImage src={post.postImg} alt="Post" />
+              {post.imageUrl ? (
+                <PostImage src={post.imageUrl} alt="Post" />
               ) : null}
               <PostContent>
                 <PostTitle>{post.title}</PostTitle>
