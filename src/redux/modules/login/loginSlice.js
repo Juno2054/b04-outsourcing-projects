@@ -16,6 +16,7 @@ const user = createSlice({
   initialState,
   reducers: {
     userLogIn(state, { payload }) {
+      console.log('-009999999999999999999999999999')
       console.log(payload)
       state.uid = payload.uid
       state.email = payload.email
@@ -26,7 +27,6 @@ const user = createSlice({
         process.env.PUBLIC_URL + '/asset/img/login/profileDefaultImg.jpg'
       state.displayName = payload.displayName
       state.currentUser = true
-      
     },
 
     userLogOut(state) {

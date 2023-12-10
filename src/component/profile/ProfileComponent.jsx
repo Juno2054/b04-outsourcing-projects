@@ -1,6 +1,6 @@
 import { uuidv4 } from '@firebase/util'
 import { updateProfile } from 'firebase/auth'
-import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { doc, updateDoc } from 'firebase/firestore'
 import {
   deleteObject,
   getDownloadURL,
@@ -34,39 +34,40 @@ function SampleProfile() {
 export default SampleProfile
 
 const SampleUserProfile = ({ setModal }) => {
-  const currentUser = useSelector((state) => state.loginSlice.currentUser)
-  const [userData, setUserData] = useState(null)
+  const user = useSelector((state) => state.loginSlice)
 
-  useEffect(()=>{
-    const fetchUserData = async ()=>{
-      try {
-        if (currentUser && currentUser.uid) {
-          // 사용자 UID를 기반으로 Firestore에서 데이터 가져오기
-          const userDocRef = doc(db, 'users', currentUser.uid);
-          const userDocSnapshot = await getDoc(userDocRef);
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     try {
+  //       if (user.currentUser && user.uid) {
+  //         // 사용자 UID를 기반으로 Firestore에서 데이터 가져오기
+  //         const userDocRef = doc(db, 'users', currentUser.uid)
+  //         const userDocSnapshot = await getDoc(userDocRef)
 
-          if (userDocSnapshot.exists()) {
-            const fetchedUserData = userDocSnapshot.data();
-            setUserData(fetchedUserData);
-          }
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  //         if (userDocSnapshot.exists()) {
+  //           const fetchedUserData = userDocSnapshot.data()
+  //           setUserData(fetchedUserData)
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error(error)
+  //     }
+  //   }
 
-    fetchUserData();
-  }, [currentUser]);
+  //   fetchUserData()
+  // }, [currentUser])
 
   return (
     <St.UserInfo>
       <St.ProfileImageWrap>
         {/* 이미지 리덕스저장소에 없으면 로컬스토리지 이미지 보여줌  */}
-        {currentUser.photoURL ? (
-          <St.ProfileImage src={currentUser.photoURL} />
+        {/* {user.photoURL ? (
+          <St.ProfileImage src={user.photoURL} />
         ) : (
           <St.ProfileImage src={UrlPhoto} />
-        )}
+        )} */}
+
+        <St.ProfileImage src={user.photoURL} />
         <St.Edit
           src={process.env.PUBLIC_URL + '/asset/img/profile/edit.png'}
           alt="Edit Icon"
@@ -81,9 +82,9 @@ const SampleUserProfile = ({ setModal }) => {
         {/* <p>{loginSlice.displayName || '닉네임'}</p>
         <p>{loginSlice.email || '이메일'}</p>
         <p>{loginSlice.intro || '자기소개'}</p> */}
-        <p>{currentUser.displayName || '닉네임'}</p>
-        <p>{currentUser.email || '이메일'}</p>
-        <p>{currentUser.intro || '자기소개'}</p>
+        <p>{user.displayName || '닉네임'}</p>
+        <p>{user.email || '이메일'}</p>
+        <p>{user.intro || '자기소개'}</p>
       </St.UserWrap>
     </St.UserInfo>
   )
@@ -91,9 +92,9 @@ const SampleUserProfile = ({ setModal }) => {
 
 const SampleModal = ({ setModal }) => {
   const inputRef = useRef({})
-  const loginSlice = useSelector((state) => state.loginSlice)
+  const user = useSelector((state) => state.loginSlice)
   const defaultImg =
-    loginSlice.photoURL ||
+    user.photoURL ||
     process.env.PUBLIC_URL + '/asset/img/login/profileDefaultImg.jpg'
   const [previewImg, setPreviewImg] = useState()
   const imgRef = useRef()
@@ -120,11 +121,11 @@ const SampleModal = ({ setModal }) => {
   // firebase 기존이미지 삭제 하기
   const deletePreProfileImageOnStorage = async () => {
     // user에게 photoURLKey가 없다면 함수 종료 하자 - 처음 프로필 등록하는 거니까
-    if (!loginSlice.profilePhotoURLKey) return
+    if (!user.profilePhotoURLKey) return
     try {
       const desertRef = ref(
         storage,
-        `profileImage/${loginSlice.email}/${loginSlice.profilePhotoURLKey}`
+        `profileImage/${user.email}/${user.profilePhotoURLKey}`
       )
       await deleteObject(desertRef)
       console.log('삭제완료')
@@ -143,7 +144,7 @@ const SampleModal = ({ setModal }) => {
       }
       const storageRef = ref(
         storage,
-        `profileImage/${loginSlice.email}/${profilePhotoURLKey}`
+        `profileImage/${user.email}/${profilePhotoURLKey}`
       )
       const UploadTask = uploadBytesResumable(storageRef, uploadImage, metaData)
 
@@ -194,7 +195,7 @@ const SampleModal = ({ setModal }) => {
 
   // 이미지 삭제, 이미지 업로드 후 다운받기, profile 수정하기를 통합하고,
   //dispatch로 user Redux에 dispatch 해줍니다.
-const currentUser = useSelector((state) => state.loginSlice.currentUser)
+  // const currentUser = useSelector((state) => state.loginSlice.currentUser) // 최상단에 const user라고 바꾼것에 다 들어가 있습니다. 원하는 정보들 !!
 
   const allInOneWithFirebaseAndUserRedux = async () => {
     try {
@@ -203,14 +204,14 @@ const currentUser = useSelector((state) => state.loginSlice.currentUser)
         await uploadProfileImageonStorage()
       await updateProfileOnFireBase(downLoadUrl)
 
-
-      const userDocRef = doc(db, 'users', currentUser.uid)
+      const userDocRef = doc(db, 'users', user.uid)
 
       await updateDoc(userDocRef, {
         photoURL: downLoadUrl,
         profilePhotoURLKey,
         intro: inputRef.current.intro.value,
-      });
+        displayName: inputRef.current.displayName.value,
+      })
 
       dispatch(
         userUpdateProfile({
@@ -255,7 +256,7 @@ const currentUser = useSelector((state) => state.loginSlice.currentUser)
           />
         </div>
         {/* 이미지 ENd */}
-        <p>이메일 : {loginSlice.email}</p>
+        <p>이메일 : {user.email}</p>
         <p>
           닉네임 :{' '}
           <St.ModalInput

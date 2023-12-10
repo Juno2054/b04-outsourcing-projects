@@ -23,11 +23,10 @@ const Login = () => {
         email,
         password
       )
-
-      const q = query(collection(db, 'users'))
+      // userCredential.user.uid를 추가한 이유는 users안에 있는 모든 데이터중 경로가 userCredential.user.uid인 사람의 데이터만 가져와 주세요 라는 의미이기 때문입니다.
+      const q = query(collection(db, 'users'), userCredential.user.uid)
       const querySnapshot = await getDocs(q)
 
-      const initialUsers = []
       let data
       querySnapshot.forEach((doc) => {
         data = {

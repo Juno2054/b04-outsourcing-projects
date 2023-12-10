@@ -43,9 +43,9 @@ const Register = () => {
       // const usersCollectionRef = collection(db, 'users')
       // await addDoc(usersCollectionRef, newUser)
 
-      const usersCollectionRef = collection(db, 'users');
-      const userDocRef = doc(usersCollectionRef, newUser.uid);
-      await setDoc(userDocRef, newUser);
+      const usersCollectionRef = collection(db, 'users')
+      const userDocRef = doc(usersCollectionRef, newUser.uid)
+      await setDoc(userDocRef, newUser)
 
       // Redux 스토어 업데이트
       dispatch(userLogIn(newUser))
