@@ -47,11 +47,13 @@ function PostFormMapSearch({ onLocationClick }) {
   }, [changeView])
 
   const handleLocationClick = (location) => {
-    setShowSearchResults(false)
-    setClickedLocation(location)
-    onLocationClick(location)
-    console.log(location)
-  }
+    setShowSearchResults(false);
+    setClickedLocation(location);
+    onLocationClick(location);
+    setLocations([]); 
+    console.log(location);
+  };
+  
   return (
     <>
       <form
