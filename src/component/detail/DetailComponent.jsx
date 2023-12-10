@@ -23,15 +23,18 @@ function DetailComponent({ post }) {
   const dispatch = useDispatch()
   const [selectStar, setSelectStar] = useState(null)
   const [isOpened, setIsOpened] = useState(false)
-  const [addressData, setAddressData] = useState(null)
+  const [addressData, setAddressData] = useState([])
   const user = useSelector((state) => state.loginSlice) //로그인 유저 정보
   const handleStarChange = (starValue) => {
     setSelectStar(starValue)
     setIsOpened(false)
   }
-
+  const dataArray = []
   console.log('파람스아이디', paramsId)
-  const clickedLocation = addressData?.clickedLocation
+  const clickedLocation = addressData.clickedLocation
+  const addressDataSelcted = addressData
+  console.log('머고', addressDataSelcted)
+  console.log('클릭한 위치', clickedLocation)
   const [selectedCommentId, setSelectedCommentId] = useState(null)
   //취소할때 리뷰 임시저장
   const [originalContent, setOriginalContent] = useState('')
@@ -41,6 +44,8 @@ function DetailComponent({ post }) {
     setOriginalContent(selectedComment.content)
     setSelectedCommentId(id)
   }
+  const placeUrl = addressDataSelcted.imageUrl
+  console.log('111111111111111placeUrl', placeUrl)
 
   // 날짜 함수
   function formatDate(dateString) {
@@ -58,23 +63,22 @@ function DetailComponent({ post }) {
 
     return date.toLocaleString('ko-KR', options)
   }
-  useEffect(() => {
-    const loginUser = async (db) => {
-      try {
-        const docRef = await doc(db, 'users')
-        console.log('유저데이터', docRef)
-        const docSnap = await getDoc(docRef)
-        if (docSnap.exists()) {
-          console.log('유저데이터', docSnap.data())
-        } else {
-          console.log('없음')
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    loginUser()
-  }, [user.uid])
+  // useEffect(() => {
+  //   const loginUser = async (db) => {
+  //     try {
+  //       const docRef = await doc(db, 'users')
+  //       console.log('유저아이디', user)
+  //       const docSnap = await getDoc(docRef)
+  //       if (docSnap.exists()) {
+  //       } else {
+  //         console.log('없음')
+  //       }
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //   }
+  //   loginUser()
+  // }, [user.uid])
 
   const [reviewsCommentslist, setReviewsCommentslist] = useState([])
   //메인페이지 데이터
@@ -82,18 +86,21 @@ function DetailComponent({ post }) {
     async function fetchDataFromFirebase(db) {
       try {
         const querySnapshot = await getDocs(collection(db, 'posts'))
-        console.log('쿼리스냅샷', querySnapshot)
         querySnapshot.forEach((doc) => {
-          console.log(' 데이터 가져오기 성공2222222:', doc.data())
-          setAddressData(doc.data(posts))
+          const data = doc.data()
+          dataArray.push(data)
+          console.log('데이터배열', dataArray)
+          if (data.id === paramsId) {
+            setAddressData(data)
+            console.log('같은아이디 가져오냐', addressData)
+          }
         })
-        console.log('파이어베이스 데이터 가져오기 성공1111111:', addressData)
       } catch (error) {
         console.log(error)
       }
     }
     fetchDataFromFirebase(db)
-  }, [])
+  }, [db, paramsId])
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -101,9 +108,7 @@ function DetailComponent({ post }) {
           collection(db, 'reviewsCommentslist'),
           orderBy('timestamp')
         )
-        console.log('쿼리', queryDb)
         const querySnapshot = await getDocs(queryDb)
-        console.log('쿼리스냅샷', querySnapshot)
         const fetchedPosts = []
         querySnapshot.forEach((doc) => {
           fetchedPosts.push({ id: doc.id, ...doc.data() })
@@ -225,17 +230,16 @@ function DetailComponent({ post }) {
   )
   return (
     <St.Container>
-      {/* 상단에는 지도에 있는 좌표 이름 과 장소 이미지? */}
-      {/* {console.log('확용', clickedLocation)} */}
       <St.TopDiv>
-        <St.TopImg />
+        {/* 이미지없을경우 기본이미지 출력 */}
+        <St.TopImg src={placeUrl} alt="" />
         <St.TopFlexDiv>
           <St.TopDiv2>
             <St.Title>
               {' '}
-              {clickedLocation?.place_name
-                ? clickedLocation?.place_name
-                : '제목없음'}{' '}
+              {clickedLocation?.place_name ||
+                addressDataSelcted?.title ||
+                '제목없음'}{' '}
             </St.Title>
 
             <St.FlexDiv>
@@ -280,23 +284,22 @@ function DetailComponent({ post }) {
           {/* <div>{posts.title}</div> */}
           {/* 일반주소 */}
           주소 :
-          {clickedLocation?.address_name
-            ? clickedLocation?.address_name
-            : '주소없음'}
-          {`(${
-            clickedLocation?.road_address_name
-              ? clickedLocation?.road_address_name
-              : '주소없음'
-          })
-          `}
-          {/* 도로명주소 */}
+          {clickedLocation?.address_name ||
+            addressDataSelcted?.title ||
+            '주소없음'}
         </St.MediumDiv2>
         <St.MediumDiv2>영업시간 : 매일 10:00 ~ 21:30</St.MediumDiv2>
-        <St.MediumDiv2>대표번호 : 02-796-1244</St.MediumDiv2>
         <St.MediumDiv2>
-          시설정보 {clickedLocation?.category_group_name}
+          대표번호 :{' '}
+          {clickedLocation?.phone
+            ? clickedLocation?.phone
+            : '대표 번호가 없네요!'}{' '}
+        </St.MediumDiv2>
+        <St.MediumDiv2>
+          시설정보 : {clickedLocation?.category_group_name}
           <St.MediumDiv2>동물출입가능</St.MediumDiv2>
           <St.MediumDiv2>흡연실</St.MediumDiv2>
+          <St.MediumDiv2>최근 수정된 날짜:</St.MediumDiv2>
         </St.MediumDiv2>
       </St.MediumDiv>
       {/* 하단에는 리뷰? 별점? 평점? */}
@@ -311,8 +314,10 @@ function DetailComponent({ post }) {
                     {console.log(user.photoURL)}
                     <img
                       src={
-                        process.env.PUBLIC_URL +
-                        '/asset/img/detaill/ico/프로필.png'
+                        user.photoURL
+                          ? user.photoURL
+                          : process.env.PUBLIC_URL +
+                            '/asset/img/detaill/ico/프로필.png'
                       }
                       alt=""
                     />
@@ -429,18 +434,18 @@ function DetailComponent({ post }) {
           {/* 맞는애들만 맵으로 하나씩 꺼내옴  */}
           {posts
             .filter((comment) => {
-              console.log(comment.contentId, paramsId)
               return comment.contentId === paramsId
             })
             .map((comment, index) => {
-              console.log('dd', comment.contentId)
               return (
                 <>
                   <St.ContentCommentList key={comment.id}>
                     <img
                       src={
-                        process.env.PUBLIC_URL +
-                        '/asset/img/detaill/ico/프로필.png'
+                        user.photoURL
+                          ? user.photoURL
+                          : process.env.PUBLIC_URL +
+                            '/asset/img/detaill/ico/프로필.png'
                       }
                       alt=""
                     />
@@ -500,8 +505,6 @@ function DetailComponent({ post }) {
                                 }
                                 selectComment(comment.id)
                                 handleDelete(comment.id, updataedData)
-
-                                console.log('삭제한 코멘트 아이디', comment.id)
                               }}
                             >
                               삭제
@@ -512,7 +515,6 @@ function DetailComponent({ post }) {
                             <button
                               onClick={() => {
                                 selectComment(comment.id)
-                                console.log('선택한 코멘트 아이디', comment.id)
                               }}
                             >
                               수정

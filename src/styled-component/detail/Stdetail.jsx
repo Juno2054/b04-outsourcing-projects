@@ -156,9 +156,10 @@ export const ContentListProfile = styled.div`
   position: relative;
   img {
     width: 50%;
-    max-width: 150px;
+    max-width: 200px;
     text-align: center;
     align-items: center;
+    border-radius: 50%;
   }
 `
 export const ContentListReview = styled.div`
@@ -181,6 +182,7 @@ export const ContentCommentList = styled.div`
     text-align: center;
     align-items: center;
     margin-right: 20px;
+    border-radius: 50%;
   }
   button {
     background-color: #ea3267;
