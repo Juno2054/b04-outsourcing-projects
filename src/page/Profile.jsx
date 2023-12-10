@@ -1,29 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytesResumable,
-} from 'firebase/storage'
-import { updateProfile } from 'firebase/auth'
-import { uuidv4 } from '@firebase/util'
-import { db, storage, auth } from '../API/firebase/firebase.API'
-import { updateDoc, doc, getDoc } from 'firebase/firestore'
-import loginSlice, {
-  userUpdateProfile,
-} from '../redux/modules/login/loginSlice'
+import React from 'react'
+import ProfileComponent from '../component/profile/ProfileComponent'
+
 function Profile() {
-  const [modal, setModal] = useState(false)
   return (
-    <StContainer>
-      {!modal ? (
-        <UserProfile setModal={setModal} />
-      ) : (
-        <Modal setModal={setModal} />
-      )}
-    </StContainer>
+    <div>
+      <ProfileComponent />
+    </div>
   )
 }
 

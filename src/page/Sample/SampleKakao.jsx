@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Map, MapMarker, useKakaoLoader } from 'react-kakao-maps-sdk'
+import { Map, MapMarker } from 'react-kakao-maps-sdk'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 

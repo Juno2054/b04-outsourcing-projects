@@ -1,11 +1,7 @@
 import React, { useEffect } from 'react'
 import { Outlet } from 'react-router'
-import Header from '../component/layout/Header'
 import Footer from '../component/layout/Footer'
-import { useDispatch } from 'react-redux'
-import { onAuthStateChanged } from '@firebase/auth'
-import { userLogIn } from '../redux/modules/login/loginSlice'
-import { auth } from '../API/firebase/firebase.API'
+import Header from '../component/layout/Header'
 function Layout() {
   const dispatch = useDispatch()
   useEffect(() => {
@@ -30,11 +26,23 @@ function Layout() {
     }
   }, [dispatch])
   return (
-    <>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+      }}
+    >
       <Header />
-      <Outlet />
+      <div
+        style={{
+          flex: 1,
+        }}
+      >
+        <Outlet />
+      </div>
       <Footer />
-    </>
+    </div>
   )
 }
 

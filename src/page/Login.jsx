@@ -1,9 +1,8 @@
 import { onAuthStateChanged, signInWithEmailAndPassword } from '@firebase/auth'
-import { collection, getDocs, query } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
-import { auth, db } from '../API/firebase/firebase.API'
+import { auth } from '../API/firebase/firebase.API'
 import { userLogIn } from '../redux/modules/login/loginSlice'
 import * as St from '../styled-component/login/loginStyle'
 import SocialLogin from './SocialLogin'
@@ -23,37 +22,26 @@ const Login = () => {
         email,
         password
       )
+      console.log('로그용', userCredential)
+      const user = userCredential.user
+      dispatch(
+        userLogIn({
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+        })
+      )
 
-      const q = query(collection(db, 'users'))
-      const querySnapshot = await getDocs(q)
+      // 로그인 할떄 로컬스토리지에 저장 해줌
+      localStorage.setItem('user', JSON.stringify(user.uid))
+      localStorage.setItem('email', JSON.stringify(user.email))
+      localStorage.setItem('displayName', JSON.stringify(user.displayName))
+      localStorage.setItem('photoURL', JSON.stringify(user.photoURL))
 
-      const initialUsers = []
-      let data
-      querySnapshot.forEach((doc) => {
-        data = {
-          id: doc.id,
-          ...doc.data(),
-        }
-      })
-
-      dispatch(userLogIn(data))
-
-      // navigate를 /로 해준것은 최상위 부모 컴포넌트가 Layout이기 때문입니다. 왜냐면은 Layout이 다 감싸고 있기 때문입니다.
-      navigate('/')
-      // 여기 주석
-      // const user = userCredential.user
-      // dispatch(
-      //   userLogIn({
-      //     uid: user.uid,
-      //     email: user.email,
-      //     displayName: user.displayName,
-      //     photoURL: user.photoURL,
-      //   })
-      // )
-      //파이어 베이스에서 데이터 읽기
       alert('로그인 성공')
-      console.log('로그인 성공', currentUser)
-      // navigate('/home')
+      console.log('로그인 성공', user)
+      navigate('/') // 수정 해야함
     } catch (error) {
       alert('로그인 실패', error.message)
       console.error('로그인 실패', error.message)
@@ -76,17 +64,17 @@ const Login = () => {
             photoURL: user.photoURL,
           })
         )
+        console.log('확인')
         // navigate('/') // 로그인한 상태라면 홈 페이지로 이동
         console.log(user)
       }
     })
-  })
-
-  //   // Clean-up 함수 등록
-  //   return () => {
-  //     unsubscribe()
-  //   }
-  // }, [dispatch, navigate])
+    // 클린업 함수 주석처리 해놧습니다 확인해주세요
+    // Clean-up 함수 등록
+    // return () => {
+    //   unsubscribe()
+    // }
+  }, [dispatch, navigate])
 
   return (
     <St.LoginContainer>

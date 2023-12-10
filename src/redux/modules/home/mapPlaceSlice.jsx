@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
   mapPlaces: [],
   selectedButton: null,
+  selectedButtonData: null,
 }
 
 const mapPlaceSlice = createSlice({
@@ -15,8 +16,12 @@ const mapPlaceSlice = createSlice({
     setSelectedButton(state, action) {
       state.selectedButton = action.payload
     },
+    setSelectedButtonData(state, action) {
+      state.selectedButtonData = action.payload
+    },
   },
 })
 
-export const { setMapPlaces, setSelectedButton } = mapPlaceSlice.actions
+export const { setMapPlaces, setSelectedButton, setSelectedButtonData } =
+  mapPlaceSlice.actions
 export default mapPlaceSlice.reducer

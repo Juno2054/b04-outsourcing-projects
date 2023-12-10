@@ -1,16 +1,45 @@
 import styled from 'styled-components'
 
 export const MyPageContainer = styled.div`
-  max-width: 400px;
+  width: 40%;
   margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
   border-radius: 8px;
   text-align: center;
+  position: relative;
+  margin-top: 50px;
+  border: 1px solid #ccc;
+  padding: 20px;
+  overflow: auto;
+  ${({ theme }) => theme.mediaQuery.md`
+    width:60%;
+ `}
+  ${({ theme }) => theme.mediaQuery.sm`
+    width:70%;
+ `}
 `
-
 export const UserInfo = styled.div`
-  margin-bottom: 20px;
+  div {
+    font-size: 12px;
+    text-align: left;
+    font-weight: bold;
+  }
+  flex-direction: row;
+  display: flex;
+`
+export const ProfileImageWrap = styled.div`
+  margin-top: 5px;
+`
+export const UserWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
+  p {
+    margin-top: 5px;
+    &:first-child {
+      font-size: ${({ theme }) => theme.fontSize.md};
+    }
+  }
 `
 
 export const ProfileImage = styled.img`
@@ -22,21 +51,101 @@ export const ProfileImage = styled.img`
 `
 
 export const Nickname = styled.span`
-  font-size: 18px;
+  font-size: ${({ theme }) => theme.fontSize.md};
   font-weight: bold;
 `
 
-export const LogoutButton = styled.button`
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 4px;
+export const Edit = styled.img`
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+`
+
+/* 모달 스타일 */
+export const Modal = styled.div`
+  width: 100%;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  p {
+    width: 100%;
+    font-size: 12px;
+    text-align: left;
+    padding: 10px;
+    font-weight: bold;
+  }
+`
+export const ProfileWrap = styled.div`
+  position: relative;
+`
+
+export const ProfileEdit = styled.img`
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  cursor: pointer;
+  position: absolute;
+  top: 50px;
+  right: 50px;
+`
+
+export const EditButton = styled.button`
   background-color: #ea3267;
   color: white;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  width: 100%;
+  height: 30px;
+  border-radius: 10px;
+  font-size: ${({ theme }) => theme.fontSize.sm};
+  margin-top: 20px;
+  font-weight: bold;
+`
 
-  &:hover {
-    background-color: #d81b60;
+export const EditInput = styled.input`
+  border: none;
+  border-bottom: 1px solid black;
+  margin-bottom: 10px;
+  width: 80%;
+  padding: 8px;
+  text-align: left; /* 좌측 정렬 설정 */
+  &:focus {
+    outline: none;
+  }
+`
+
+export const P = styled.p`
+  font-size: ${({ theme }) => theme.fontSize.sm};
+  width: 100%;
+  flex: 1;
+  text-align: left;
+  font-weight: 600;
+  line-height: 2.2;
+`
+
+export const BioWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-content: stretch;
+  justify-content: space-evenly;
+  align-items: baseline;
+`
+export const Bio = styled.span`
+  font-size: ${({ theme }) => theme.fontSize.sm};
+  font-weight: 600;
+  margin-top: 10px;
+`
+
+export const ModalInput = styled.input`
+  border: none;
+  &:focus {
+    outline: none;
   }
 `

@@ -11,7 +11,7 @@ function CarouselCard({ post }) {
     navigate(`/detail/${post.id}`, { state: post })
   }
 
-  const imageUrl = post.postImg || defaultImage
+  const imageUrl = post.imageUrl || defaultImage
 
   return (
     <CardContainer>
@@ -39,6 +39,8 @@ const Image = styled.img`
   transition: opacity 0.3s ease-in-out;
   border-radius: 10px;
   border: 3px solid #ea3267;
+  min-width: 200px;
+  min-height: 200px;
 
   ${CardContainer}:hover & {
     opacity: 0.7;
@@ -62,9 +64,20 @@ const TextOverlay = styled.div`
 const Title = styled.h2`
   color: #000;
   font-size: 24px;
+  text-align: center;
+  margin-bottom: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
 `
 
 const Content = styled.p`
   color: #000;
   font-size: 16px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 250px;
 `
