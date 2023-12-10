@@ -32,9 +32,8 @@ const PostMainSection = styled.section`
   max-height: 1100px;
 `
 const Header = styled.h2`
-  font-size: 24px;
-  color: #333;
-  text-align: center;
+  font-size: 15px;
+  text-align: center;x
   cursor: pointer;
   margin-top: 15px;
 `

@@ -37,8 +37,11 @@ const PostCarousel = ({ place }) => {
               </SlideItem>
             ))}
           </SlideList>
-          <PrevButton onClick={prevSlide}>{'<'}</PrevButton>
-          <NextButton onClick={nextSlide}>{'>'}</NextButton>
+          <SliderButton>
+          <PrevButton onClick={prevSlide}>{'이전 글 '}</PrevButton>
+          <NextButton onClick={nextSlide}>{'다음 글 '}</NextButton>
+          </SliderButton>
+        
         </>
       )}
     </SliderContainer>
@@ -49,17 +52,12 @@ export default PostCarousel
 
 const Message = styled.p`
   text-align: center;
-  font-size: 20px;
-  color: #555;
-  font-style: italic;
+  font-size: 12px;
   margin-top: 10px;
 `
 
 const SliderContainer = styled.div`
   width: 100%;
-  position: relative;
-  margin-top: 10px;
-  margin-bottom: 10px;
 `
 
 const SlideList = styled.ul`
@@ -74,23 +72,25 @@ const SlideItem = styled.li`
 `
 
 const SliderButton = styled.button`
-  position: absolute;
-  top: 50%;
-  padding: 5px;
-  transform: translateY(-50%);
-  background-color: transparent;
   border: none;
   font-weight: bold;
-  cursor: pointer;
-  color: #ea3267;
+
 `
 
-const PrevButton = styled(SliderButton)`
-  font-size: 40px;
-  left: 10px;
+const PrevButton = styled.button`
+  font-size: 12px;
+  background-color:black;
+  color:white;
+  border-radius:10px;
+  padding: 10px;
+  margin-left:10px;
 `
 
-const NextButton = styled(SliderButton)`
-  font-size: 40px;
-  right: 10px;
+const NextButton = styled.button`
+  font-size: 12px;
+  margin-left:10px;
+  background-color:black;
+  color:white;
+  border-radius:10px;
+  padding: 10px;
 `

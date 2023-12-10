@@ -121,9 +121,10 @@ function PostFormMapSearch({ onLocationClick }) {
 export default PostFormMapSearch
 
 const SearchButton = styled.button`
-  background-color: #e55fc1;
+  background-color:black;
   color: white;
-  font-size: 16px;
+  font-size: 13px;
+  font-weight: bold;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -133,6 +134,8 @@ const SearchButton = styled.button`
 
   &:hover {
     background-color: #ea3267;
+    color:white;
+    font-weight: bold;
   }
 `;
 
@@ -143,11 +146,13 @@ const SearchInput = styled.input`
   border-radius: 5px;
   margin-right: 10px;
   width: 337px;
+  border: none; 
+  outline: none;
 `;
 
 const ToggleButton = styled.button`
   text-align: center;
-  background-color: #e55fc1;
+  background-color:black;
   color: white;
   font-size: 16px;
   padding: 10px 20px;
@@ -155,10 +160,6 @@ const ToggleButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
-
-  &:hover {
-    background-color: #ea3267;
-  }
 `;
 
 const StDiv = styled.div`
@@ -168,17 +169,16 @@ const StDiv = styled.div`
   margin: 20px 0;
   padding: 20px;
   border-radius: 10px;
-  border: 3px solid #ea3267;
   cursor: pointer;
+  border:1px solid black;
 
   h2 {
     margin: 0;
-    font-size: 18px;
+    font-size: 15px;
   }
 
   a {
     text-decoration: none;
-    color: blue;
     &:hover {
       text-decoration: underline;
     }
@@ -186,9 +186,8 @@ const StDiv = styled.div`
 `;
 
 const SelectedLocationHeading = styled.h2`
-  font-size: 24px;
+  font-size: 15px;
   text-align:center;
-  color: #333;
   margin-bottom: 15px;
   margin-top:15px;
 `;
