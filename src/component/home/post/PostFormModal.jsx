@@ -26,7 +26,8 @@ function PostFormModal({ closeModal }) {
   const [imagePreview, setImagePreview] = useState('');
   const mapPlaces = useSelector((state) => state.mapPlace.mapPlaces)
   const user = useSelector((state) => state.loginSlice);
-
+   
+  console.log(user)
   const handleTitleChange = (e) => {
     setTitle(e.target.value)
   }
@@ -106,6 +107,9 @@ function PostFormModal({ closeModal }) {
         imageUrl: imageUrl,
         createdAt: serverTimestamp(),
         userId: user.uid,
+        userNickName: user.displayName,
+        userEmail: user.email
+
       });
   
       setTitle('');
