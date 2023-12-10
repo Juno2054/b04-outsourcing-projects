@@ -11,8 +11,8 @@ import SocialLogin from './SocialLogin'
 const Login = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('as1@test.com')
+  const [password, setPassword] = useState('asdf12')
   const currentUser = useSelector((state) => state.loginSlice.currentUser)
   console.log(currentUser)
   const handleLogin = async (e) => {

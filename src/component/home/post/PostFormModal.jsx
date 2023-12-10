@@ -3,7 +3,6 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { v4 as uuidv4 } from 'uuid'
 import { db, storage } from '../../../API/firebase/firebase.API'
 import PostFormMapSearch from '../map/PostFormMapSearch'
 
@@ -26,6 +25,9 @@ function PostFormModal({ closeModal }) {
   const [imageUrl, setImageUrl] = useState('');
   const [imagePreview, setImagePreview] = useState('');
   const mapPlaces = useSelector((state) => state.mapPlace.mapPlaces)
+  const user = useSelector((state) => state.loginSlice);
+
+  
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value)
@@ -93,10 +95,8 @@ function PostFormModal({ closeModal }) {
         imageUrl = await getDownloadURL(storageRef);
       }
   
-      const postId = uuidv4();
   
       await addDoc(collection(db, 'posts'), {
-        id: postId,
         title: title,
         content: content,
         rating: rating,
@@ -107,6 +107,7 @@ function PostFormModal({ closeModal }) {
         clickedLocation,
         imageUrl: imageUrl,
         createdAt: serverTimestamp(),
+        userId: user.uid,
       });
   
       setTitle('');

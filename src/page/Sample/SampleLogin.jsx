@@ -1,21 +1,20 @@
 import {
-  createUserWithEmailAndPassword,
   GithubAuthProvider,
   GoogleAuthProvider,
+  createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
-  signOut
+  signOut,
 } from '@firebase/auth'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-
 import { auth } from '../../API/firebase/firebase.API'
 import {
   sampleUserCurrentState,
   sampleUserSignIn,
-  sampleUserSignOut
+  sampleUserSignOut,
 } from '../../redux/modules/sample/sampleUserSlice'
 
 function SampleLogin() {
