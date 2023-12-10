@@ -16,16 +16,16 @@ const starRating = [
 ]
 
 function PostFormModal({ closeModal }) {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [rating, setRating] = useState(0);
-  const [selectedMapPlace, setSelectedMapPlace] = useState('');
-  const [clickedLocation, setClickedLocation] = useState(null);
-  const [selectedFile, setSelectedFile] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [imagePreview, setImagePreview] = useState('');
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
+  const [rating, setRating] = useState(0)
+  const [selectedMapPlace, setSelectedMapPlace] = useState('')
+  const [clickedLocation, setClickedLocation] = useState(null)
+  const [selectedFile, setSelectedFile] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
+  const [imagePreview, setImagePreview] = useState('')
   const mapPlaces = useSelector((state) => state.mapPlace.mapPlaces)
-  const user = useSelector((state) => state.loginSlice);
+  const user = useSelector((state) => state.loginSlice)
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value)
@@ -47,53 +47,60 @@ function PostFormModal({ closeModal }) {
     setClickedLocation(location)
   }
   const handleFileSelect = (event) => {
-    const file = event.target.files[0];
-  
+    const file = event.target.files[0]
+
     if (file) {
-      const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
-  
+      const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif']
+
       if (allowedFileTypes.includes(file.type)) {
-        setSelectedFile(file);
-  
-        const previewURL = URL.createObjectURL(file);
-        setImagePreview(previewURL);
+        setSelectedFile(file)
+
+        const previewURL = URL.createObjectURL(file)
+        setImagePreview(previewURL)
       } else {
-        alert('이 파일 형식은 허용되지 않습니다. JPG, PNG, GIF 파일을 선택해주세요.');
-        event.target.value = null;
-        setSelectedFile('');
-        setImagePreview(''); 
+        alert(
+          '이 파일 형식은 허용되지 않습니다. JPG, PNG, GIF 파일을 선택해주세요.'
+        )
+        event.target.value = null
+        setSelectedFile('')
+        setImagePreview('')
       }
     }
-  };
-
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-  
+    e.preventDefault()
 
-    const confirmSubmission = window.confirm('정말 이대로 게시하시겠습니까?');
+    const confirmSubmission = window.confirm('정말 이대로 게시하시겠습니까?')
 
     if (!confirmSubmission) {
-      return; 
+      return
     }
-  
 
-    if (!title.trim() || !content.trim() || !selectedMapPlace.trim() || rating === 0 || !clickedLocation) {
-      alert('제목, 내용, 게시물 항목, 별점, 위치를 전부 입력해주세요.');
-      return;
+    if (
+      !title.trim() ||
+      !content.trim() ||
+      !selectedMapPlace.trim() ||
+      rating === 0 ||
+      !clickedLocation
+    ) {
+      alert('제목, 내용, 게시물 항목, 별점, 위치를 전부 입력해주세요.')
+      return
     }
-  
+
     try {
-      const selectedPlace = mapPlaces.find((place) => place.mapName === selectedMapPlace);
-      const category_group_code = selectedPlace?.category_group_code || '';
-  
-      let imageUrl = '';
+      const selectedPlace = mapPlaces.find(
+        (place) => place.mapName === selectedMapPlace
+      )
+      const category_group_code = selectedPlace?.category_group_code || ''
+
+      let imageUrl = ''
       if (selectedFile) {
-        const storageRef = ref(storage, 'postImg/' + selectedFile.name);
-        await uploadBytes(storageRef, selectedFile);
-        imageUrl = await getDownloadURL(storageRef);
+        const storageRef = ref(storage, 'postImg/' + selectedFile.name)
+        await uploadBytes(storageRef, selectedFile)
+        imageUrl = await getDownloadURL(storageRef)
       }
-  
+
       await addDoc(collection(db, 'posts'), {
         title: title,
         content: content,
@@ -106,22 +113,20 @@ function PostFormModal({ closeModal }) {
         imageUrl: imageUrl,
         createdAt: serverTimestamp(),
         userId: user.uid,
-      });
-  
-      setTitle('');
-      setContent('');
-      setRating(0);
-      setSelectedMapPlace('');
-      setSelectedFile('');
-      setImageUrl('');
-  
- 
-      window.location.reload();
-  
+      })
+
+      setTitle('')
+      setContent('')
+      setRating(0)
+      setSelectedMapPlace('')
+      setSelectedFile('')
+      setImageUrl('')
+
+      window.location.reload()
     } catch (error) {
-      console.error('문서 추가 중 발생한 오류 입니다.', error);
+      console.error('문서 추가 중 발생한 오류 입니다.', error)
     }
-  };
+  }
 
   return (
     <ModalWrapper>
@@ -134,7 +139,7 @@ function PostFormModal({ closeModal }) {
           value={title}
           onChange={handleTitleChange}
           placeholder="제목을 입력해주세요(20자 제한)"
-              maxLength={20}
+          maxLength={20}
         />
         <Label htmlFor="content">내용</Label>
         <TextArea
@@ -142,7 +147,7 @@ function PostFormModal({ closeModal }) {
           value={content}
           onChange={handleContentChange}
           placeholder="내용을 입력해주세요(200자 제한)"
-              maxLength={200}
+          maxLength={200}
         />
         <Label htmlFor="rating">별점</Label>
         <Select id="rating" value={rating} onChange={handleRatingChange}>
@@ -168,7 +173,7 @@ function PostFormModal({ closeModal }) {
           ))}
         </Select>
         <div>
-        <FileInputButton htmlFor="file-upload">
+          <FileInputButton htmlFor="file-upload">
             이미지 첨부하기
             <FileInput
               id="file-upload"
@@ -176,12 +181,8 @@ function PostFormModal({ closeModal }) {
               onChange={handleFileSelect}
             />
           </FileInputButton>
-          {selectedFile && (
-            <FileName>{selectedFile.name}</FileName>
-          )}
-          {imagePreview && (
-            <ImagePreview src={imagePreview} alt="Preview" />
-          )}
+          {selectedFile && <FileName>{selectedFile.name}</FileName>}
+          {imagePreview && <ImagePreview src={imagePreview} alt="Preview" />}
         </div>
         <PostFormMapSearch onLocationClick={handleLocationClick} />
         <SubmitButton type="submit">게시</SubmitButton>
@@ -198,7 +199,7 @@ const ModalWrapper = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color:white;
+  background-color: white;
   border-radius: 10px;
   padding: 20px;
   width: 400px;
@@ -237,7 +238,7 @@ const Input = styled.input`
   outline: none;
   padding: 8px;
   border-radius: 4px;
-  border:1px solid black;
+  border: 1px solid #ea3267;
 `
 
 const TextArea = styled.textarea`
@@ -250,13 +251,15 @@ const TextArea = styled.textarea`
 const Select = styled.select`
   padding: 8px;
   border-radius: 4px;
-  margin-bottom: 20px;
+  border: 1px solid #ea3267;
+  margin-bottom: 10px;
   font-size: 16px;
 `
 
 const FileInputButton = styled.label`
-display: inline-block;
-  background-color:black;
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: #e55fc1;
   color: white;
   font-size: 13px;
   font-weight: bold;
@@ -264,48 +267,45 @@ display: inline-block;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  text-align:center;
-  width:140px;
+  text-align: center;
+  margin-bottom: 10px;
 
   &:hover {
     background-color: #ea3267;
-    color:white;
+    color: white;
     font-weight: bold;
   }
-`;
+`
 
 const FileInput = styled.input`
   display: none;
   border: none;
   outline: none;
-`;
+`
 
 const FileName = styled.span`
   margin-left: 10px;
-`;
-
+`
 
 const ImagePreview = styled.img`
   max-width: 100%;
   margin-top: 10px;
   margin-bottom: 5px;
-`;
+`
 
 const Option = styled.option``
 
 const SubmitButton = styled.button`
   padding: 8px 16px;
-  background-color:black;
+  background-color: black;
   color: white;
   border: none;
   border-radius: 10px;
   cursor: pointer;
   align-self: flex-end;
-  font-size:13px;
-  font-weight:bold;
-  margin-top:20px;
+  font-size: 13px;
+  font-weight: bold;
+  margin-top: 20px;
 
   &:hover {
     background-color: #ea3267;
