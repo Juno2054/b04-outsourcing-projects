@@ -6,7 +6,7 @@ const initialState = {
   displayName: null,
   email: '',
   photoURL: null,
-  profileIntro: '',
+  intro: '',
   profilePhotoURLKey: '',
   id: '',
 }
@@ -19,13 +19,14 @@ const user = createSlice({
       console.log(payload)
       state.uid = payload.uid
       state.email = payload.email
+      state.id = payload.id
+      state.intro = payload.intro
       state.photoURL =
         payload.photoURL ||
         process.env.PUBLIC_URL + '/asset/img/login/profileDefaultImg.jpg'
       state.displayName = payload.displayName
       state.currentUser = true
-      state.id = payload.id
-      state.profileIntro = payload.profileIntro
+      
     },
 
     userLogOut(state) {
@@ -39,8 +40,9 @@ const user = createSlice({
     userUpdateProfile(state, { payload }) {
       state.photoURL = payload.photoURL
       state.profilePhotoURLKey = payload.profilePhotoURLKey
-      state.profileIntro = payload.profileIntro
+      state.intro = payload.intro
       state.displayName = payload.displayName
+      state.id = payload.id
     },
   },
 })

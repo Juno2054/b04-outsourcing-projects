@@ -1,4 +1,4 @@
-import { onAuthStateChanged } from '@firebase/auth'
+import { onAuthStateChanged } from 'firebase/auth'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Outlet } from 'react-router'
@@ -30,11 +30,23 @@ function Layout() {
     }
   }, [dispatch])
   return (
-    <>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+      }}
+    >
       <Header />
-      <Outlet />
+      <div
+        style={{
+          flex: 1,
+        }}
+      >
+        <Outlet />
+      </div>
       <Footer />
-    </>
+    </div>
   )
 }
 

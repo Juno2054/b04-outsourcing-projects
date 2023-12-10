@@ -1,5 +1,6 @@
 import { uuidv4 } from '@firebase/util'
 import { updateProfile } from 'firebase/auth'
+import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import {
   deleteObject,
   getDownloadURL,
@@ -8,7 +9,7 @@ import {
 } from 'firebase/storage'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { auth, storage } from '../../API/firebase/firebase.API'
+import { auth, db, storage } from '../../API/firebase/firebase.API'
 import { userUpdateProfile } from '../../redux/modules/login/loginSlice'
 import * as St from '../../styled-component/profile/Stprofile'
 // 로컬스토리지에 저장된 정보 가져오기 - 로그인 할때 저장해줬음
@@ -33,14 +34,36 @@ function SampleProfile() {
 export default SampleProfile
 
 const SampleUserProfile = ({ setModal }) => {
-  const loginSlice = useSelector((state) => state.loginSlice)
+  const currentUser = useSelector((state) => state.loginSlice.currentUser)
+  const [userData, setUserData] = useState(null)
+
+  useEffect(()=>{
+    const fetchUserData = async ()=>{
+      try {
+        if (currentUser && currentUser.uid) {
+          // 사용자 UID를 기반으로 Firestore에서 데이터 가져오기
+          const userDocRef = doc(db, 'users', currentUser.uid);
+          const userDocSnapshot = await getDoc(userDocRef);
+
+          if (userDocSnapshot.exists()) {
+            const fetchedUserData = userDocSnapshot.data();
+            setUserData(fetchedUserData);
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUserData();
+  }, [currentUser]);
 
   return (
     <St.UserInfo>
       <St.ProfileImageWrap>
         {/* 이미지 리덕스저장소에 없으면 로컬스토리지 이미지 보여줌  */}
-        {loginSlice.photoURL ? (
-          <St.ProfileImage src={loginSlice.photoURL} />
+        {currentUser.photoURL ? (
+          <St.ProfileImage src={currentUser.photoURL} />
         ) : (
           <St.ProfileImage src={UrlPhoto} />
         )}
@@ -52,12 +75,15 @@ const SampleUserProfile = ({ setModal }) => {
       </St.ProfileImageWrap>
       <St.UserWrap>
         {/* //로컬스토리지에 저장된 정보 가져옴 - 로그인 할때 저장해줬음 */}
-        <p>{UrlDisplayName}</p>
+        {/* <p>{UrlDisplayName}</p>
         <p>{UrlEmail}</p>
-        <p>{UrlIntro}</p>
+        <p>{UrlIntro}</p> */}
         {/* <p>{loginSlice.displayName || '닉네임'}</p>
         <p>{loginSlice.email || '이메일'}</p>
         <p>{loginSlice.intro || '자기소개'}</p> */}
+        <p>{currentUser.displayName || '닉네임'}</p>
+        <p>{currentUser.email || '이메일'}</p>
+        <p>{currentUser.intro || '자기소개'}</p>
       </St.UserWrap>
     </St.UserInfo>
   )
@@ -168,12 +194,24 @@ const SampleModal = ({ setModal }) => {
 
   // 이미지 삭제, 이미지 업로드 후 다운받기, profile 수정하기를 통합하고,
   //dispatch로 user Redux에 dispatch 해줍니다.
+const currentUser = useSelector((state) => state.loginSlice.currentUser)
+
   const allInOneWithFirebaseAndUserRedux = async () => {
     try {
       await deletePreProfileImageOnStorage()
       const { downLoadUrl, profilePhotoURLKey } =
         await uploadProfileImageonStorage()
       await updateProfileOnFireBase(downLoadUrl)
+
+
+      const userDocRef = doc(db, 'users', currentUser.uid)
+
+      await updateDoc(userDocRef, {
+        photoURL: downLoadUrl,
+        profilePhotoURLKey,
+        intro: inputRef.current.intro.value,
+      });
+
       dispatch(
         userUpdateProfile({
           photoURL: downLoadUrl,

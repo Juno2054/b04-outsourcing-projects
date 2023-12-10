@@ -2,7 +2,7 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
 } from '@firebase/auth'
-import { addDoc, collection } from 'firebase/firestore'
+import { collection, doc, setDoc } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -17,7 +17,7 @@ const Register = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [displayName, setDisplayName] = useState('')
-  const [profileIntro, setProfileIntro] = useState('')
+  const [intro, setIntro] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -35,12 +35,17 @@ const Register = () => {
         uid: credentialUser.user.uid,
         email: credentialUser.user.email,
         displayName,
-        profileIntro,
+        intro,
+        // id: credentialUser.user.id,
       }
 
       // 'users' 콜렉션에 다큐먼트 추가
-      const usersCollectionRef = collection(db, 'users')
-      await addDoc(usersCollectionRef, newUser)
+      // const usersCollectionRef = collection(db, 'users')
+      // await addDoc(usersCollectionRef, newUser)
+
+      const usersCollectionRef = collection(db, 'users');
+      const userDocRef = doc(usersCollectionRef, newUser.uid);
+      await setDoc(userDocRef, newUser);
 
       // Redux 스토어 업데이트
       dispatch(userLogIn(newUser))
@@ -50,7 +55,7 @@ const Register = () => {
       navigate('/')
       console.log('로그인 성공')
     } catch (error) {
-      alert('회원가입 실패')
+      alert('회원가입 형식에 따라 작성해주세요.')
       console.log('회원가입 실패', error.message)
     }
   }
@@ -87,27 +92,27 @@ const Register = () => {
         <St.LoginForm>
           <St.InputBox
             type="email"
-            placeholder="이메일"
+            placeholder="이메일 (이메일 형식)"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <St.InputBox
             type="text"
             maxLength={10}
-            placeholder="닉네임"
+            placeholder="닉네임 (10자 이하)"
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
           />
           <St.InputBox
             type="text"
             maxLength={20}
-            placeholder="자기소개"
-            value={profileIntro}
-            onChange={(e) => setProfileIntro(e.target.value)}
+            placeholder="자기소개 (20자 이하)"
+            value={intro}
+            onChange={(e) => setIntro(e.target.value)}
           />
           <St.InputBox
             type="password"
-            placeholder="비밀번호"
+            placeholder="비밀번호 (6자 이상)"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
