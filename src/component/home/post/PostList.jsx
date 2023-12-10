@@ -62,7 +62,12 @@ const PostListSection = styled.section`
   align-items: flex-start;
   margin: 5px;
   flex-basis: 25%;
-`
+  overflow-y: scroll; 
+  height: 100%; 
+  max-height: 1100px;
+  overflow-x: hidden;
+`;
+
 const PlaceHeader = styled.h2`
   margin-bottom: 20px;
   margin-top: 10px;
