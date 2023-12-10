@@ -1,34 +1,52 @@
-import React from 'react'
-import { useDispatch } from 'react-redux'
-import { userLogOut } from '../redux/modules/login/loginSlice'
-import { auth } from '../API/firebase/firebase.API'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import Map from '../component/home/map/Map'
+import PostList from '../component/home/post/PostList'
+import PostSection from '../component/home/post/PostSection'
+import { Container, HomeSection } from '../styled-component/home/homeStyles'
 
-function Home() {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+const Home = () => {
+  const [selectedPlace, setSelectedPlace] = useState(null)
+  const [showPostList, setShowPostList] = useState(true)
 
-  const handleLogout = async () => {
-    try {
-      // Firebase에서 로그아웃
-      // 왜 signOut(auth)는 안되나요???
-      await auth.signOut()
+  useEffect(() => {
+    togglePostList()
+  }, [])
 
-      // Redux 스토어에서 로그아웃 액션을 디스패치하여 사용자 상태 초기화
-      dispatch(userLogOut())
-      console.log('로그아웃 성공')
-      navigate('/')
-    } catch (error) {
-      console.error('로그아웃 실패', error.message)
-    }
+  const handlePlaceClick = (placeData) => {
+    setSelectedPlace(placeData)
+  }
+
+  const togglePostList = () => {
+    setShowPostList(!showPostList)
   }
 
   return (
-    <div>
-      <div>Home</div>
-      <button onClick={handleLogout}>로그아웃</button>
-    </div>
+    <HomeSection>
+      <Container>
+        <PostSection onPlaceClick={handlePlaceClick} />
+        {showPostList && <PostList selectedPlace={selectedPlace} />}
+        <div style={{ position: 'relative', marginTop: '450px' }}>
+          <ToggleButton onClick={togglePostList}>
+            {showPostList ? '<' : '>'}
+          </ToggleButton>
+        </div>
+        <Map />
+      </Container>
+    </HomeSection>
   )
 }
-
 export default Home
+
+const ToggleButton = styled.button`
+  background-color: #f14e4e;
+  font-weight: bold;
+  height: 60px;
+  color: #fff;
+  border: none;
+  padding: 10px 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+  font-size: 30px;
+`

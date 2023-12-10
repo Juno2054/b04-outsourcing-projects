@@ -2,11 +2,6 @@ import {
   createUserWithEmailAndPassword,
   GithubAuthProvider,
   GoogleAuthProvider,
-
-
-
-
-
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,

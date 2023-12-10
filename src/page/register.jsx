@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import * as St from '../styled-component/login/loginStyle'
-import { useNavigate } from 'react-router-dom'
 import { createUserWithEmailAndPassword } from '@firebase/auth'
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { auth } from '../API/firebase/firebase.API'
 import { userLogIn } from '../redux/modules/login/loginSlice'
-import { useDispatch } from 'react-redux'
+import * as St from '../styled-component/login/loginStyle'
 
 const Register = () => {
   const navigate = useNavigate()
