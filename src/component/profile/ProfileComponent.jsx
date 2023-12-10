@@ -133,6 +133,7 @@ const SampleModal = ({ setModal }) => {
       throw new Error('이전 이미지 삭제하다가 나버린', error)
     }
   }
+  console.log(user)
 
   // 프로필 사진 Storage에 올리기
   // 나머지 코드와 함께 수정된 부분
