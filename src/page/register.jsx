@@ -23,31 +23,25 @@ const Register = () => {
     e.preventDefault()
 
     try {
-      // Firebase Authentication에서 회원가입 처리
       const credentialUser = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       )
 
-      // Firestore에 유저 정보 저장
+      
       const newUser = {
         uid: credentialUser.user.uid,
         email: credentialUser.user.email,
         displayName,
         intro,
-        // id: credentialUser.user.id,
       }
 
-      // 'users' 콜렉션에 다큐먼트 추가
-      // const usersCollectionRef = collection(db, 'users')
-      // await addDoc(usersCollectionRef, newUser)
 
       const usersCollectionRef = collection(db, 'users')
       const userDocRef = doc(usersCollectionRef, newUser.uid)
       await setDoc(userDocRef, newUser)
 
-      // Redux 스토어 업데이트
       dispatch(userLogIn(newUser))
 
       alert(`${credentialUser.user.email}님 안녕하세요.`)
@@ -66,7 +60,6 @@ const Register = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // 로그인한 사용자 정보를 Redux 스토어에 저장
         dispatch(
           userLogIn({
             uid: user.uid,
@@ -75,12 +68,11 @@ const Register = () => {
             photoURL: user.photoURL,
           })
         )
-        navigate('/') // 로그인한 상태라면 홈 페이지로 이동
+        navigate('/')
         console.log(user)
       }
     })
 
-    // Clean-up 함수 등록
     return () => {
       unsubscribe()
     }
@@ -127,6 +119,3 @@ const Register = () => {
 }
 
 export default Register
-
-// firebase Authentication에서 만든 user의 uid로 firebase, firestore에 users라는 콜렉션에 다큐먼트를 만든다.
-//

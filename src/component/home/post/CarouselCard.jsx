@@ -11,7 +11,7 @@ function CarouselCard({ post }) {
     navigate(`/detail/${post.id}`, { state: post })
   }
 
-  const imageUrl = post.postImg || defaultImage
+  const imageUrl = post.imageUrl || defaultImage
 
   return (
     <CardContainer>

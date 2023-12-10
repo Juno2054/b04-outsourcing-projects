@@ -10,7 +10,6 @@ import * as St from '../../styled-component/layout/Header/StHeader'
 function Header() {
   const [modal, setModal] = useState(false)
   const currentUser = useSelector((state) => state.loginSlice.currentUser)
-  console.log(currentUser)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -31,10 +30,7 @@ function Header() {
 
   const LogOutHandler = async () => {
     try {
-      // Firebase에서 로그아웃
-      // 왜 signOut(auth)는 안되나요???
       await signOut(auth)
-      // Redux 스토어에서 로그아웃 액션을 디스패치하여 사용자 상태 초기화
       dispatch(userLogOut())
       console.log('로그아웃 성공', currentUser)
       navigate('/')
