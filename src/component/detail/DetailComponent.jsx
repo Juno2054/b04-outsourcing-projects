@@ -33,6 +33,7 @@ function DetailComponent({ post }) {
   console.log('파람스아이디', paramsId)
   const clickedLocation = addressData.clickedLocation
   const addressDataSelcted = addressData
+  const 날짜 = addressDataSelcted?.timestamp
   console.log('머고', addressDataSelcted)
   console.log('클릭한 위치', clickedLocation)
   const [selectedCommentId, setSelectedCommentId] = useState(null)
@@ -45,7 +46,6 @@ function DetailComponent({ post }) {
     setSelectedCommentId(id)
   }
   const placeUrl = addressDataSelcted.imageUrl
-  console.log('111111111111111placeUrl', placeUrl)
 
   // 날짜 함수
   function formatDate(dateString) {
@@ -63,22 +63,6 @@ function DetailComponent({ post }) {
 
     return date.toLocaleString('ko-KR', options)
   }
-  // useEffect(() => {
-  //   const loginUser = async (db) => {
-  //     try {
-  //       const docRef = await doc(db, 'users')
-  //       console.log('유저아이디', user)
-  //       const docSnap = await getDoc(docRef)
-  //       if (docSnap.exists()) {
-  //       } else {
-  //         console.log('없음')
-  //       }
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-  //   loginUser()
-  // }, [user.uid])
 
   const [reviewsCommentslist, setReviewsCommentslist] = useState([])
   //메인페이지 데이터
@@ -418,14 +402,14 @@ function DetailComponent({ post }) {
             </St.ContentImgBox>
           </St.ContentList>
           <St.ContentList>
+            별점 {'⭐'.repeat(addressData?.rating - 1)}
+          </St.ContentList>
+          <St.ContentList>
             {/* 리뷰 갯수  */}
             <p>
               전체{' '}
               <span style={{ color: 'blue' }}>{filteredComments.length}</span>
             </p>
-          </St.ContentList>
-          <St.ContentList>
-            별점 {'⭐'.repeat(addressData?.rating - 1)}
           </St.ContentList>
         </St.ContentDiv>
         <St.ContentListReviewComment>
