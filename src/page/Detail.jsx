@@ -55,6 +55,14 @@ function Detail() {
     const rodeUrl = `https://map.kakao.com/link/to/${place},${placePosition?.lat},${placePosition?.lng}`
     window.open(rodeUrl)
   }
+const handShareClick =async () => {
+  try {
+   await navigator.clipboard.writeText(window.location.href);
+    alert('링크가 클립보드에 복사되었습니다!');
+  } catch (err) {
+    console.log('링크 복사 실패', err);
+  }
+}
 
   const handleUpdate = async () => {
     try {
@@ -87,6 +95,7 @@ function Detail() {
     }
     return null;
   };
+console.log(location.state)
   return (
     <St.Container>
       <St.TopDiv>
@@ -116,7 +125,7 @@ function Detail() {
                 />
                 <St.P>길찾기</St.P>
               </St.FlexDivMenu>
-              <St.FlexDivMenu>
+              <St.FlexDivMenu onClick={handShareClick}>
                 <St.FlexDivMenuImg
                   src={
                     process.env.PUBLIC_URL + '/asset/img/detaill/ico/공유.png'

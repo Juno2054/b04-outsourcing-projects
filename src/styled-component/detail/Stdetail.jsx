@@ -132,8 +132,8 @@ export const H2 = styled.h2`
   font-size: 20px;
 `
 export const ContentDiv = styled.div`
-
-  padding: 20px;
+width: 100%;
+    padding: 20px;
   border: 1px solid #f2f2f2;
   font-size: 20px;
   margin-bottom: 20px;
