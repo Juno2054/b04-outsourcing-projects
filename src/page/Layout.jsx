@@ -17,16 +17,17 @@ function Layout() {
       const q = query(collection(db, 'users'), user.uid)
       const querySnapshot = await getDocs(q)
 
-      let data
+      let dataArr = []
       querySnapshot.forEach((doc) => {
-        data = {
+        const data = {
           id: doc.id,
           ...doc.data(),
-          photoURL: user.photoURL,
         }
+        dataArr.push(data)
       })
 
-      dispatch(userLogIn(data))
+      const userInfo = dataArr.filter((target) => target.uid === user.uid)
+      dispatch(userLogIn(userInfo[0]))
     } catch (error) {
       console.log(error)
     }
@@ -42,7 +43,6 @@ function Layout() {
       }
     })
 
-   
     return () => {
       unsubscribe()
     }
