@@ -14,7 +14,6 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const currentUser = useSelector((state) => state.loginSlice.currentUser)
-  console.log(currentUser)
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
@@ -23,25 +22,29 @@ const Login = () => {
         email,
         password
       )
+
       const q = query(collection(db, 'users'), userCredential.user.uid)
       const querySnapshot = await getDocs(q)
 
-      let data
+      let dataArr = []
       querySnapshot.forEach((doc) => {
-        data = {
+        const data = {
           id: doc.id,
           ...doc.data(),
         }
+        dataArr.push(data)
       })
 
-      dispatch(userLogIn(data))
+      const userInfo = dataArr.filter(
+        (target) => target.uid === userCredential.user.uid
+      )
 
-     
+      dispatch(userLogIn(userInfo[0]))
+
       navigate('/')
-     
+
       alert('로그인 성공')
       console.log('로그인 성공', currentUser)
-     
     } catch (error) {
       alert('로그인 실패', error.message)
       console.error('로그인 실패', error.message)
@@ -73,7 +76,7 @@ const Login = () => {
             <St.LoginButton onClick={handleLogin}>로그인</St.LoginButton>
             <St.JoinButton onClick={handleToRegister}>회원가입</St.JoinButton>
           </St.ButtonBox>
-          <SocialLogin/>
+          <SocialLogin />
         </St.LoginForm>
       </St.LoginFormContainer>
     </St.LoginContainer>
