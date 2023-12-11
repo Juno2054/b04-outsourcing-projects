@@ -25,8 +25,8 @@ function PostFormModal({ closeModal }) {
   const [imageUrl, setImageUrl] = useState('')
   const [imagePreview, setImagePreview] = useState('')
   const mapPlaces = useSelector((state) => state.mapPlace.mapPlaces)
-  const user = useSelector((state) => state.loginSlice)
-
+  const user = useSelector((state) => state.loginSlice);
+   
   const handleTitleChange = (e) => {
     setTitle(e.target.value)
   }
@@ -113,16 +113,19 @@ function PostFormModal({ closeModal }) {
         imageUrl: imageUrl,
         createdAt: serverTimestamp(),
         userId: user.uid,
+        userNickName: user.displayName,
+        userEmail: user.email
       })
-
-      setTitle('')
-      setContent('')
-      setRating(0)
-      setSelectedMapPlace('')
-      setSelectedFile('')
-      setImageUrl('')
+  
+      setTitle('');
+      setContent('');
+      setRating(0);
+      setSelectedMapPlace('');
+      setSelectedFile('');
+      setImageUrl('');
 
       window.location.reload()
+
     } catch (error) {
       console.error('문서 추가 중 발생한 오류 입니다.', error)
     }
