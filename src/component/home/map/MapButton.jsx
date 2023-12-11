@@ -61,7 +61,7 @@ function MapButton() {
 export default MapButton
 
 const MapWrap= styled.div`
-  border:1px solid red;
+  /* border:1px solid red; */
 `
 
 const MapSection = styled.section`
@@ -69,14 +69,15 @@ width:50%;
 position:absolute;
 z-index:10;
   top:5%;
-  right:8%;
+  right:10%;
   display: flex;
+  gap:5px;
   flex-direction: row-reverse;
   justify-content: space-around;
   ${({ theme }) => theme.mediaQuery.md`
+  right:5%;
     flex-direction: column;
     align-items: flex-end;
-    gap:5px;
  `}
   ${({ theme }) => theme.mediaQuery.sm`
     flex-direction: column;
@@ -96,7 +97,7 @@ const Button = styled.button`
   color: #ea3267;
   font-weight:bold;
   border: none;
-  border-radius: 15px;
+  border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
   margin-left:px;

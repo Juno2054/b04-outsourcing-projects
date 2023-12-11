@@ -46,21 +46,22 @@ function PostFormModal({ closeModal }) {
   const handleLocationClick = (location) => {
     setClickedLocation(location)
   }
-
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
+  
     if (file) {
       const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
+  
       if (allowedFileTypes.includes(file.type)) {
         setSelectedFile(file);
-
+  
         const previewURL = URL.createObjectURL(file);
         setImagePreview(previewURL);
       } else {
         alert('이 파일 형식은 허용되지 않습니다. JPG, PNG, GIF 파일을 선택해주세요.');
         event.target.value = null;
         setSelectedFile('');
-        setImagePreview('');
+        setImagePreview(''); 
       }
     }
   };
@@ -238,7 +239,7 @@ const Input = styled.input`
   outline: none;
   padding: 8px;
   border-radius: 4px;
-  /* border: 1px solid #ea3267; */
+  border:1px solid black;
 `
 
 const TextArea = styled.textarea`
@@ -251,11 +252,12 @@ const TextArea = styled.textarea`
 const Select = styled.select`
   padding: 8px;
   border-radius: 4px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   font-size: 16px;
 `
 
-const FileInputButton = styled.button`
+const FileInputButton = styled.label`
+display: inline-block;
   background-color:black;
   color: white;
   font-size: 13px;
@@ -264,8 +266,10 @@ const FileInputButton = styled.button`
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align:center;
+  width:140px;
 
   &:hover {
     background-color: #ea3267;

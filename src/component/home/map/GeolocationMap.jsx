@@ -90,7 +90,7 @@ const GeolocationMap = () => {
       >
         {!state.isLoading && (
           <MapMarker position={state.center}>
-            <div style={{ padding: '5px'}}>
+            <div style={{ padding: '5px' ,borderRadius:'5px'}}>
               {state.errMsg ? state.errMsg : '현재 위치'}
             </div>
           </MapMarker>

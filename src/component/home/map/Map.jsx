@@ -16,5 +16,5 @@ export default Map
 
 const MapSection = styled.section`
   position: relative;
-  flex-basis: 50%;
+  flex-basis: 75%;
 `

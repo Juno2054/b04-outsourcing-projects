@@ -125,12 +125,13 @@ const SearchButton = styled.button`
   color: white;
   font-size: 13px;
   font-weight: bold;
-  padding: 10px 20px;
-  border: none;
+  padding: 10px;
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
   margin-bottom: 10px;
+  text-align: center;
+  width:120px;
 
   &:hover {
     background-color: #ea3267;
@@ -142,12 +143,12 @@ const SearchButton = styled.button`
 const SearchInput = styled.input`
   padding: 10px;
   font-size: 16px;
-  border: 1px solid #ccc;
+  border: 1px solid black;
   border-radius: 5px;
   margin-right: 10px;
   width: 337px;
-  border: none; 
   outline: none;
+  margin-top:20px;
 `;
 
 const ToggleButton = styled.button`
