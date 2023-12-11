@@ -173,7 +173,7 @@ function Detail() {
              <St.FlexDiv>
              <St.UserDiv>
                 <h3>작성 유저</h3>
-                <p>닉네임: {location.state.userName}</p>
+                <p>닉네임: {location.state.userNickName}</p>
                 <p>Email: {location.state.userEmail}</p>
                 <p>별점 {'⭐'.repeat(location.state.rating - 1)}</p>
               </St.UserDiv>

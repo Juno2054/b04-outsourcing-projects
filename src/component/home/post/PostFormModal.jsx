@@ -109,7 +109,7 @@ function PostFormModal({ closeModal }) {
         userId: user.uid,
         userNickName: user.displayName,
         userEmail: user.email
-      });
+      })
   
       setTitle('');
       setContent('');
