@@ -33,7 +33,7 @@ const PostMainSection = styled.section`
 `
 const Header = styled.h2`
   font-size: 15px;
-  text-align: center;x
+  text-align: center;
   cursor: pointer;
   margin-top: 15px;
 `
