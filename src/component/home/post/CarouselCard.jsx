@@ -46,6 +46,7 @@ const Image = styled.img`
   /* transition: opacity 0.3s ease-in-out; */
   border-radius: 10px;
   height:300px;
+  cursor: pointer;
 `
 
 const TextOverlay = styled.div`
