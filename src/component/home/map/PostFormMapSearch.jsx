@@ -57,16 +57,29 @@ function PostFormMapSearch({ onLocationClick }) {
   return (
     <>
       <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          setChangeView(true)
-        }}
-      >
-       <SearchInput type="text" ref={searchInputRef} placeholder="주소지를 정확히 입력해주세요!"/>
-        <SearchButton type="button" onClick={() => setChangeView(true)}>
-        주소 검색하기
-      </SearchButton>
-      </form>
+      onSubmit={(e) => {
+    e.preventDefault();
+    if (searchInputRef.current.value.trim() !== '') {
+      setChangeView(true);
+    } else {
+      console.log('Please enter a valid search query.');
+    }
+  }}
+>
+  <SearchInput type="text" ref={searchInputRef} placeholder="주소지를 정확히 입력해주세요!" />
+  <SearchButton
+    type="button"
+    onClick={() => {
+      if (searchInputRef.current.value.trim() !== '') {
+        setChangeView(true);
+      } else {
+        console.log('Please enter a valid search query.');
+      }
+    }}
+  >
+    주소 검색하기
+  </SearchButton>
+</form>
 
       {!showSearchResults && locations.length > 0 && (
       <ToggleButton type="button" onClick={() => setShowSearchResults(true)}>

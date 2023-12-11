@@ -73,14 +73,14 @@ const GeolocationMap = () => {
             )
           }}
         >
-          현재위치 이동
+          현재위치 이동 현재위치 이동
         </StyledButton>
       </p>
       <Map
         center={state.center}
         style={{
           width: 'auto',
-          height: '88%',
+          height: '98%',
           borderRadius: '10px',
           margin: '10px',
         }}
@@ -90,7 +90,7 @@ const GeolocationMap = () => {
       >
         {!state.isLoading && (
           <MapMarker position={state.center}>
-            <div style={{ padding: '5px'}}>
+            <div style={{ padding: '5px' }}>
               {state.errMsg ? state.errMsg : '현재 위치'}
             </div>
           </MapMarker>
@@ -104,30 +104,29 @@ const GeolocationMap = () => {
           />
         ))}
       </Map>
-  
     </>
   )
 }
 
 const StyledButton = styled.button`
-position:absolute;
-z-index:10;
-  background-color:black;
-  top:5%;
-  left:5%;
+  position: absolute;
+  z-index: 10;
+  background-color: black;
+  top: 5%;
+  left: 5%;
   color: #fff;
   border: none;
   border-radius: 10px;
   padding: 10px 15px;
   cursor: pointer;
   font-size: 13px;
-  font-weight:bold;
+  font-weight: bold;
   transition: background-color 0.3s ease;
 
   &:hover {
     background-color: #d80054;
   }
-`;
+`
 
 export default GeolocationMap
 

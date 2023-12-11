@@ -27,13 +27,17 @@ export default PostSection
 
 const PostMainSection = styled.section`
   flex-basis: 25%;
-  overflow-y: scroll; 
-  height: 100%; 
+  overflow-y: scroll;
+  height: 100%;
   max-height: 1100px;
 `
 const Header = styled.h2`
-  font-size: 15px;
+  font-size: 30px;
   text-align: center;
   cursor: pointer;
   margin-top: 15px;
+
+  &:hover {
+    color: #ea3267;
+  }
 `
