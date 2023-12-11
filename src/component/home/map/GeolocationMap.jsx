@@ -73,7 +73,7 @@ const GeolocationMap = () => {
             )
           }}
         >
-          현재위치 이동 현재위치 이동
+          현재위치 이동
         </StyledButton>
       </p>
       <Map

@@ -202,7 +202,7 @@ const ModalWrapper = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: white;
+  background-color:white;
   border-radius: 10px;
   padding: 20px;
   width: 400px;
@@ -241,7 +241,7 @@ const Input = styled.input`
   outline: none;
   padding: 8px;
   border-radius: 4px;
-  border: 1px solid #ea3267;
+  border:1px solid black;
 `
 
 const TextArea = styled.textarea`
@@ -254,15 +254,13 @@ const TextArea = styled.textarea`
 const Select = styled.select`
   padding: 8px;
   border-radius: 4px;
-  border: 1px solid #ea3267;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   font-size: 16px;
 `
 
 const FileInputButton = styled.label`
-  display: inline-block;
-  padding: 8px 12px;
-  background-color: #e55fc1;
+display: inline-block;
+  background-color:black;
   color: white;
   font-size: 13px;
   font-weight: bold;
@@ -270,47 +268,63 @@ const FileInputButton = styled.label`
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  text-align: center;
-  margin-bottom: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align:center;
+  width:140px;
 
   &:hover {
     background-color: #ea3267;
-    color: white;
+    color:white;
     font-weight: bold;
   }
-`
+`;
 
 const FileInput = styled.input`
   display: none;
   border: none;
   outline: none;
-`
+`;
 
 const FileName = styled.span`
   margin-left: 10px;
-`
+`;
+
 
 const ImagePreview = styled.img`
   max-width: 100%;
   margin-top: 10px;
   margin-bottom: 5px;
-`
+`; 
 
 const Option = styled.option``
 
 const SubmitButton = styled.button`
   padding: 8px 16px;
-  background-color: black;
+  background-color:black;
   color: white;
   border: none;
   border-radius: 10px;
   cursor: pointer;
   align-self: flex-end;
-  font-size: 13px;
-  font-weight: bold;
-  margin-top: 20px;
+  font-size:13px;
+  font-weight:bold;
+  margin-top:20px;
 
   &:hover {
     background-color: #ea3267;
   }
 `
+
+
+
+
+
+
+
+
+
+
+
+
+
