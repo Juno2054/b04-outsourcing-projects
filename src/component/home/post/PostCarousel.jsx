@@ -36,11 +36,11 @@ const PostCarousel = ({ place }) => {
                 <PostCard post={post} />
               </SlideItem>
             ))}
+            <SliderButton>
+              <PrevButton onClick={prevSlide}>{'이전 글 '}</PrevButton>
+              <NextButton onClick={nextSlide}>{'다음 글 '}</NextButton>
+            </SliderButton>
           </SlideList>
-          <SliderButton>
-            <PrevButton onClick={prevSlide}>{'이전 글 '}</PrevButton>
-            <NextButton onClick={nextSlide}>{'다음 글 '}</NextButton>
-          </SliderButton>
         </>
       )}
     </SliderContainer>
@@ -60,9 +60,9 @@ const SliderContainer = styled.div`
 `
 
 const SlideList = styled.ul`
-  display: flex;
+  /* display: flex; */
   overflow-x: hidden;
-  padding: 0;
+  padding: 24px;
   list-style-type: none;
 `
 

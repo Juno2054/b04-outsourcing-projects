@@ -30,6 +30,15 @@ const PostMainSection = styled.section`
   overflow-y: scroll;
   height: 100%;
   max-height: 1100px;
+  > ul > li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    div {
+      width: 100%;
+    }
+  }
 `
 const Header = styled.h2`
   font-size: 30px;
