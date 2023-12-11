@@ -27,8 +27,8 @@ export default PostSection
 
 const PostMainSection = styled.section`
   flex-basis: 25%;
-  overflow-y: scroll; 
-  height: 100%; 
+  overflow-y: scroll;
+  height: 100%;
   max-height: 1100px;
 `
 const Header = styled.h2`
@@ -40,5 +40,4 @@ const Header = styled.h2`
   &:hover {
     color: #ea3267;
   }
-
 `

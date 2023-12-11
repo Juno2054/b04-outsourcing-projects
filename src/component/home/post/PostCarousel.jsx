@@ -38,10 +38,9 @@ const PostCarousel = ({ place }) => {
             ))}
           </SlideList>
           <SliderButton>
-          <PrevButton onClick={prevSlide}>{'이전 글 '}</PrevButton>
-          <NextButton onClick={nextSlide}>{'다음 글 '}</NextButton>
+            <PrevButton onClick={prevSlide}>{'이전 글 '}</PrevButton>
+            <NextButton onClick={nextSlide}>{'다음 글 '}</NextButton>
           </SliderButton>
-        
         </>
       )}
     </SliderContainer>
@@ -74,24 +73,23 @@ const SlideItem = styled.li`
 const SliderButton = styled.button`
   border: none;
   font-weight: bold;
-
 `
 
 const PrevButton = styled.button`
   font-size: 12px;
-  background-color:black;
-  color:white;
-  border-radius:10px;
+  background-color: black;
+  color: white;
+  border-radius: 10px;
   padding: 10px;
-  margin-left:10px;
+  margin-left: 10px;
 `
 
 const NextButton = styled.button`
   font-size: 12px;
-  margin-left:10px;
-  background-color:black;
-  color:white;
-  border-radius:10px;
+  margin-left: 10px;
+  background-color: black;
+  color: white;
+  border-radius: 10px;
   padding: 10px;
   margin-top: 10px;
 `
